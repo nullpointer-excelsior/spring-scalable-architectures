@@ -1,0 +1,43 @@
+<div class="flex items-center justify-center space-x-8 bg-gray-100 py-4">
+    <!-- Paso 1 -->
+    <div class="flex items-center">
+        <div class="flex items-center justify-center w-8 h-8 rounded-full border-2" [ngClass]="{
+          'bg-blue-500 text-white border-blue-500': currentStep >= 1,
+          'bg-white text-gray-500 border-gray-300': currentStep < 1
+        }">
+            <a routerLink="/shipping">
+                1
+            </a>
+        </div>
+        <span class="ml-2 text-sm font-medium text-gray-700">SHIPPING</span>
+    </div>
+
+    <!-- Paso 2 -->
+    <div class="flex items-center">
+        <div class="flex items-center justify-center w-8 h-8 rounded-full border-2" [ngClass]="{
+          'bg-blue-500 text-white border-blue-500': currentStep >= 2,
+          'bg-white text-gray-500 border-gray-300': currentStep < 2
+        }">
+            <a routerLink="/billing">
+                2
+            </a>
+        </div>
+        <span class="ml-2 text-sm font-medium text-gray-700">BILLING</span>
+    </div>
+
+    <!-- Paso 3 -->
+    <div class="flex items-center">
+        <div class="flex items-center justify-center w-8 h-8 rounded-full border-2" [ngClass]="{
+          'bg-blue-500 text-white border-blue-500': currentStep >= 3,
+          'bg-white text-gray-500 border-gray-300': currentStep < 3
+        }">
+            <a routerLink="/confirmation">
+                3
+            </a>
+        </div>
+        <span class="ml-2 text-sm font-medium text-gray-700">REVIEW & CONFIRMATION</span>
+    </div>
+</div>
+<div class="container mx-auto">
+    <ng-content></ng-content>
+</div>
