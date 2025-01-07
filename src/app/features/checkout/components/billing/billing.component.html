@@ -1,0 +1,22 @@
+<div [formGroup]="billingForm" appBorderIndicator class="flex flex-col">
+    <div class="flex flex-row">
+        <div appBorderIndicator class="basis-1/2">
+            <app-input-text class="mx-2" title="Fullname" formControlName="fullname"></app-input-text>
+            <app-input-text class="mx-2" title="Address" formControlName="address"></app-input-text>
+            <app-input-text class="mx-2" title="City" formControlName="city"></app-input-text>
+        </div>
+        <div appBorderIndicator class="basis-1/2">
+            <app-input-text class="mx-2" title="Card name" formControlName="cardName"></app-input-text>
+            <app-input-text class="mx-2" title="Card number" formControlName="cardNumber"></app-input-text>
+            <div class="flex flex-row space-x-2">
+                <app-input-text title="Expiration date" formControlName="expirationDate"></app-input-text>
+                <app-input-text title="CVV" formControlName="cvv"></app-input-text>
+            </div>
+        </div>
+    </div>
+    <div class="flex justify-center my-8">
+        <button appCheckoutButton routerLink="/confirmation" (click)="onContinue()" [disabled]="!billingForm.valid">
+            Continue
+        </button>
+    </div>
+</div>

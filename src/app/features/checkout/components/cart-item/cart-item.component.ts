@@ -1,5 +1,5 @@
 import { Component, input, Input } from '@angular/core';
-import { ItemCart } from '../../models/item-cart.model';
+import { ItemCartModel } from '@core/models/cart.model';
 
 @Component({
   selector: 'app-cart-item',
@@ -7,7 +7,7 @@ import { ItemCart } from '../../models/item-cart.model';
   templateUrl: './cart-item.component.html'
 })
 export class CartItemComponent {
-  item = input<ItemCart>({
+  item = input<ItemCartModel>({
     sku: 0,
     name: '',
     brand: '',
