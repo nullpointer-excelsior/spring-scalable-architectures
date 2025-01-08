@@ -1,13 +1,12 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
-import { routes } from './app.routes';
+import { CartState } from '@core/store/state/cart.state';
+import { CheckoutState } from '@core/store/state/checkout.state';
+import { UIState } from '@core/store/state/ui.state';
+import { UserState } from '@core/store/state/user.state';
 import { withNgxsReduxDevtoolsPlugin } from '@ngxs/devtools-plugin';
 import { provideStore } from '@ngxs/store';
-import { CartState } from '@core/store/state/cart.state';
-import { ShippingState } from '@core/store/state/shipping.state';
-import { BillingState } from '@core/store/state/billing.state';
-import { UserState } from '@core/store/state/user.state';
+import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,9 +14,9 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideStore([
       CartState,
-      ShippingState,
-      BillingState,
-      UserState
+      UserState,
+      CheckoutState,
+      UIState
     ],
       withNgxsReduxDevtoolsPlugin()
     )

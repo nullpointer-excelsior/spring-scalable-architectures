@@ -1,13 +1,7 @@
-
-export interface ItemCartModel {
-    sku: number;
-    name: string;
-    brand: string;
-    price: number;
-    quantity: number;
-    image: string;
-}
+import { ProductModel } from "@core/models/product.model";
 
 export interface CartModel {
-    items: ItemCartModel[];
+    products: ProductModel[];
+    total: number;
 }
+

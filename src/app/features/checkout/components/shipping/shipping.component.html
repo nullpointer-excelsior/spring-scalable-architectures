@@ -10,7 +10,7 @@
             <p class="mt-1 text-gray-900">FREE</p>
           </div>
 
-          <input type="radio" value="DeliveryStandard" formControlName="delivery"
+          <input type="radio" [value]="deliveryOptions.Standard" formControlName="delivery"
             class="size-5 border-gray-300 text-blue-500" checked />
         </label>
       </div>
@@ -23,7 +23,7 @@
             <p class="mt-1 text-gray-900">$9.99</p>
           </div>
 
-          <input type="radio" value="DeliveryPriority" formControlName="delivery"
+          <input type="radio" [value]="deliveryOptions.Express" formControlName="delivery"
             class="size-5 border-gray-300 text-blue-500" />
         </label>
       </div>

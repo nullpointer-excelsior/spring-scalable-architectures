@@ -2,8 +2,8 @@
     <!-- Paso 1 -->
     <div class="flex items-center">
         <div class="flex items-center justify-center w-8 h-8 rounded-full border-2" [ngClass]="{
-          'bg-blue-500 text-white border-blue-500': currentStep >= 1,
-          'bg-white text-gray-500 border-gray-300': currentStep < 1
+          'bg-blue-500 text-white border-blue-500': currentStep() >= 1,
+          'bg-white text-gray-500 border-gray-300': currentStep() < 1
         }">
             <a routerLink="/shipping">
                 1
@@ -15,8 +15,8 @@
     <!-- Paso 2 -->
     <div class="flex items-center">
         <div class="flex items-center justify-center w-8 h-8 rounded-full border-2" [ngClass]="{
-          'bg-blue-500 text-white border-blue-500': currentStep >= 2,
-          'bg-white text-gray-500 border-gray-300': currentStep < 2
+          'bg-blue-500 text-white border-blue-500': currentStep() >= 2,
+          'bg-white text-gray-500 border-gray-300': currentStep() < 2
         }">
             <a routerLink="/billing">
                 2
@@ -28,8 +28,8 @@
     <!-- Paso 3 -->
     <div class="flex items-center">
         <div class="flex items-center justify-center w-8 h-8 rounded-full border-2" [ngClass]="{
-          'bg-blue-500 text-white border-blue-500': currentStep >= 3,
-          'bg-white text-gray-500 border-gray-300': currentStep < 3
+          'bg-blue-500 text-white border-blue-500': currentStep() >= 3,
+          'bg-white text-gray-500 border-gray-300': currentStep() < 3
         }">
             <a routerLink="/confirmation">
                 3

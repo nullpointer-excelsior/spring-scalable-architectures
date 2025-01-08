@@ -12,12 +12,17 @@ export interface CreditCardModel {
     cvv: number;
 }
 
-export interface PaymentMethodModel {
-    type: string;
-    payment: CreditCardModel;
+export enum PaymentMethod {
+    CreditCard = 'CreditCard',
+    GiftCard = 'GiftCard'
+}
+
+export interface PaymentModel {
+    method: PaymentMethod;
+    details: CreditCardModel;
 }
 
 export interface BillingModel {
     contactInfo: ContactInfoModel;
-    paymentMethod: PaymentMethodModel;
+    payment: PaymentModel;
 }

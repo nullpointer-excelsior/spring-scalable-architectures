@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { PaymentMethod } from '@core/models/billing.model';
+import { SetBillingAction } from '@core/store/actions/set-billing.action';
+import { SetCurrentStep } from '@core/store/actions/set-current-step.action';
+import { UserState } from '@core/store/state/user.state';
 import { Store } from '@ngxs/store';
 import { InputTextComponent } from "@shared/components/input-text/input-text.component";
 import { BorderIndicatorDirective } from '@shared/directives/border-indicator.directive';
 import { CheckoutButtonDirective } from '@shared/directives/checkout-button.directive';
-import { SetBillingAction } from '@core/store/actions/set-billing.action';
-import { UserState } from '@core/store/state/user.state';
 
 @Component({
   selector: 'app-billing',
@@ -37,6 +39,7 @@ export class BillingComponent {
       expirationDate: ['', Validators.required],
       cvv: ['', Validators.required]
     });
+    this.store.dispatch(new SetCurrentStep(2))
   }
 
   onContinue() {
@@ -46,9 +49,9 @@ export class BillingComponent {
         address: this.billingForm.value.address,
         city: this.billingForm.value.city,
       },
-      paymentMethod: {
-        type: 'creditCard',
-        payment: {
+      payment: {
+        method: PaymentMethod.CreditCard,
+        details: {
           cardName: this.billingForm.value.cardName,
           cardNumber: this.billingForm.value.cardNumber,
           expiration: this.billingForm.value.expirationDate,
