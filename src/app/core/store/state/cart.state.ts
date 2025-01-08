@@ -23,4 +23,9 @@ export class CartState {
   static getItems(state: CartModel): ItemCartModel[] {
     return state.items;
   }
+
+  @Selector()
+  static getTotal(state: CartModel): number {
+    return state.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  }
 }
