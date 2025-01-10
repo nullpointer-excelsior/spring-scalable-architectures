@@ -1,5 +1,4 @@
-import { Component, effect, inject, OnInit, Signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, inject, Signal } from '@angular/core';
 import { ProductModel } from '@core/models/product.model';
 import { SetCurrentStep } from '@core/store/actions/set-current-step.action';
 import { CartState } from '@core/store/state/cart.state';
@@ -8,6 +7,7 @@ import { ConfirmationItemSummaryComponent } from "@features/checkout/components/
 import { Store } from '@ngxs/store';
 import { BorderIndicatorDirective } from '@shared/directives/border-indicator.directive';
 import { CheckoutButtonDirective } from '@shared/directives/checkout-button.directive';
+import { CheckoutState } from '@core/store/state/checkout.state';
 
 @Component({
   selector: 'app-confirmation',
@@ -19,22 +19,14 @@ import { CheckoutButtonDirective } from '@shared/directives/checkout-button.dire
   ],
   templateUrl: './confirmation.component.html'
 })
-export class ConfirmationComponent implements OnInit {
+export class ConfirmationComponent {
   
   private store: Store = inject(Store);
-  private router = inject(Router);
-  cartItems: Signal<ProductModel[]> = this.store.selectSignal(CartState.getProducts);
-  total: Signal<number> = this.store.selectSignal(CartState.getTotal);
+  products: Signal<ProductModel[]> = this.store.selectSignal(CartState.getProducts);
+  summary = this.store.selectSignal(CheckoutState.getCheckoutSummary);
 
   constructor() {
-    effect(() => {
-      if (this.total() === 0) this.router.navigate(['/shipping']);
-    })
     this.store.dispatch(new SetCurrentStep(3))
-  }
-
-  ngOnInit(): void {
-   
   }
 
 }

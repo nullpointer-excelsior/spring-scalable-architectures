@@ -10,5 +10,5 @@ export class ConfirmationItemSummaryComponent {
   @Input()
   name: string = '';
   @Input()
-  value: string = '';
+  value: string | number;
 }

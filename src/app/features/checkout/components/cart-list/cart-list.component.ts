@@ -9,6 +9,6 @@ import { ProductModel } from '@core/models/product.model';
 })
 export class CartListComponent{
   
-  items = input<ProductModel[]>();
+  products = input<ProductModel[]>();
 
 }
