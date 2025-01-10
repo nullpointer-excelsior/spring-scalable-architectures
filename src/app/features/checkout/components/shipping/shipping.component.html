@@ -1,5 +1,5 @@
 <div appBorderIndicator class="flex flex-col">
-  <form [formGroup]="shippingForm">
+  <form [formGroup]="form">
     <fieldset class="space-y-4">
       <legend class="sr-only">Delivery</legend>
       <div>
@@ -29,7 +29,7 @@
       </div>
     </fieldset>
     <div class="flex justify-center my-8">
-      <button appCheckoutButton routerLink="/billing" (click)="onContinue()" [disabled]="!shippingForm.valid" type="button">
+      <button appCheckoutButton routerLink="/billing" (click)="onContinue()" [disabled]="!form.valid" type="button">
         Continue
       </button>
     </div>

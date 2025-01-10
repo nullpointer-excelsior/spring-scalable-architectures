@@ -1,4 +1,4 @@
-export function getCartItems() {
+export function getCartProducts() {
    return [{
          sku: 1,
          name: "Judas Priest T-Shirt",

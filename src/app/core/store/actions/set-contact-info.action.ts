@@ -1,6 +1,6 @@
 import { ContactInfoModel } from "@core/models/billing.model";
 
 export class SetContactInfoAction {
-    static readonly type = '[Billing] Set Contact Info';
+    static readonly type = '[Checkout] Set Contact Info';
     constructor(public contactInfo: ContactInfoModel) { }
 }

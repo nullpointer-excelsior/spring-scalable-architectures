@@ -1,14 +1,11 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Delivery } from '@core/models/shipping.model';
+import { CreateRandomCheckoutAction } from '@core/store/actions/create-random-checkout.action';
 import { SetCurrentStep } from '@core/store/actions/set-current-step.action';
 import { SetShippingAction } from '@core/store/actions/set-shipping.action';
-import { SetUserAction } from '@core/store/actions/set-user.action';
-import { UpdateCheckoutProductsAction } from '@core/store/actions/update-checkout-products.action';
-import { getCartItems as getCartProducts } from '@core/utils/get-cart-items';
-import { getRandomElements } from '@core/utils/get-random-elements';
-import { getUsers } from '@core/utils/get-users';
+import { FormFactoryService } from '@features/checkout/services/form-factory.service';
 import { Store } from '@ngxs/store';
 import { BorderIndicatorDirective } from '@shared/directives/border-indicator.directive';
 import { CheckoutButtonDirective } from '@shared/directives/checkout-button.directive';
@@ -23,25 +20,23 @@ import { CheckoutButtonDirective } from '@shared/directives/checkout-button.dire
   ],
   templateUrl: './shipping.component.html'
 })
-export class ShippingComponent implements OnInit {
+export class ShippingComponent {
 
-  deliveryOptions = Delivery
-  shippingForm = new FormGroup({
-    delivery: new FormControl(this.deliveryOptions.Standard, Validators.required),
-  })
   private store = inject(Store);
-
-  ngOnInit(): void {
-    const user = getRandomElements(getUsers(), 1)[0];
-    const products = getRandomElements(getCartProducts(), 3);
-    this.store.dispatch(new SetUserAction(user));
-    this.store.dispatch(new UpdateCheckoutProductsAction(products));
-    this.store.dispatch(new SetCurrentStep(1))
+  private formFactory = inject(FormFactoryService)
+  public form: FormGroup = this.formFactory.createShippingForm()
+  public deliveryOptions = Delivery
+  
+  constructor() {
+    this.store.dispatch([
+      new CreateRandomCheckoutAction(),
+      new SetCurrentStep(1)
+    ])
   }
 
   onContinue() {
     this.store.dispatch(new SetShippingAction({
-      delivery: this.shippingForm.value.delivery
+      delivery: this.form.value.delivery
     }))
   }
 
