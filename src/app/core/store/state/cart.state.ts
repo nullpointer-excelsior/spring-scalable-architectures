@@ -6,6 +6,7 @@ import { UpdateCheckoutProductsAction as UpdateCartProductsAction } from '@core/
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { DeleteCartProductAction } from '@core/store/actions/delete-cart-product.action';
 import { CartService } from '@core/services/cart.service';
+import { UpdateCartProductAction } from '@core/store/actions/update-cart-product.action';
 
 @State<CartModel>({
   name: 'cart',
@@ -38,6 +39,16 @@ export class CartState {
     });
   }
 
+  @Action(UpdateCartProductAction)
+  updateCartProductAction(ctx: StateContext<CartModel>, { product }: UpdateCartProductAction) {
+    const state = ctx.getState();
+    const products = [
+      ...state.products.filter(p => p.sku !== product.sku),
+      product
+    ]
+    ctx.dispatch(new UpdateCartProductsAction(products))
+  }
+
   @Action(DeleteCartProductAction)
   deleteCartProductAction(ctx: StateContext<CartModel>, { sku }: DeleteCartProductAction) {
     const state = ctx.getState();
@@ -51,7 +62,7 @@ export class CartState {
 
   @Selector()
   static getProducts(state: CartModel): ProductModel[] {
-    return state.products;
+    return state.products.sort((a, b) => +a.sku - +b.sku);
   }
 
   @Selector()
