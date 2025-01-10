@@ -1,4 +1,5 @@
 import { PaymentMethod } from "@core/models/billing.model";
+import { CartModel } from "@core/models/cart.model";
 import { CheckoutModel } from "@core/models/checkout.model";
 import { Delivery } from "@core/models/shipping.model";
 import { CreateRandomCheckoutAction } from "@core/store/actions/create-random-checkout.action";
@@ -7,12 +8,11 @@ import { SetContactInfoAction } from "@core/store/actions/set-contact-info.actio
 import { SetShippingAction } from "@core/store/actions/set-shipping.action";
 import { SetUserAction } from "@core/store/actions/set-user.action";
 import { UpdateCheckoutProductsAction } from "@core/store/actions/update-checkout-products.action";
+import { CartState } from "@core/store/state/cart.state";
 import { getCartProducts } from "@core/utils/get-cart-items";
 import { getRandomElements } from "@core/utils/get-random-elements";
 import { getUsers } from "@core/utils/get-users";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
-import { CartState } from "./cart.state";
-import { CartModel } from "../../models/cart.model";
 
 @State<CheckoutModel>({
     name: 'checkout',
@@ -120,8 +120,8 @@ export class CheckoutState {
         return {
             shippingOption: checkout.shipping.delivery === Delivery.Standard? 'Regular (3 -7 days)' : 'Express (1 -3 days)',
             paymentMethod: checkout.billing.payment.method,
-            itemsQuantity: cart.products.reduce((acc, item) => acc + item.quantity, 0),
-            total: cart.total
+            productsQuantity: cart.productsQuantity,
+            amount: cart.amount
         }
     }
 }

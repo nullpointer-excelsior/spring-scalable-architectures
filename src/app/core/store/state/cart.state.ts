@@ -4,18 +4,23 @@ import { ProductModel } from '@core/models/product.model';
 import { SetCartAction } from '@core/store/actions/set-cart.action';
 import { UpdateCheckoutProductsAction as UpdateCartProductsAction } from '@core/store/actions/update-checkout-products.action';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { DeleteCartProductAction } from '@core/store/actions/delete-cart-product.action';
+import { CartService } from '@core/services/cart.service';
 
 @State<CartModel>({
   name: 'cart',
   defaults: {
     products: [],
-    total: 0
+    amount: 0,
+    productsQuantity: 0
   }
 })
 @Injectable({
   providedIn: 'root'
 })
 export class CartState {
+
+  constructor(private cart: CartService) {}
 
   @Action(SetCartAction)
   setCart(ctx: StateContext<CartModel>, action: SetCartAction) {
@@ -28,8 +33,20 @@ export class CartState {
     ctx.setState({
       ...state,
       products: products,
-      total: products.reduce((acc, item) => acc + item.price * item.quantity, 0)
+      amount: this.cart.calculateTotal(products),
+      productsQuantity: this.cart.calculateProductsQuantity(products)
     });
+  }
+
+  @Action(DeleteCartProductAction)
+  deleteCartProductAction(ctx: StateContext<CartModel>, { sku }: DeleteCartProductAction) {
+    const state = ctx.getState();
+    const products = this.cart.deleteProduct(sku, state.products)
+    ctx.patchState({
+      products,
+      amount: this.cart.calculateTotal(products),
+      productsQuantity: this.cart.calculateProductsQuantity(products)
+    })
   }
 
   @Selector()
@@ -38,12 +55,12 @@ export class CartState {
   }
 
   @Selector()
-  static getTotal(state: CartModel): number {
-    return state.total;
+  static getAmount(state: CartModel): number {
+    return state.amount;
   }
 
   @Selector()
-  static getTotalProducts(state: CartModel) {
-    return state.products.reduce((acc, item) => acc + item.quantity, 0)
+  static getProductQuantity(state: CartModel) {
+    return state.productsQuantity
   }
 }

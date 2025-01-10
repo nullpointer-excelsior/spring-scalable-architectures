@@ -6,12 +6,12 @@
         <h2 class="text-2xl font-bold text-gray-700">Summary</h2>
         <hr class="w-full my-4 border-gray-200 dark:border-gray-700">
         <app-confirmation-item-summary name="Shipping option" [value]="summary().shippingOption"></app-confirmation-item-summary>
-        <app-confirmation-item-summary name="Items quantity" [value]="summary().itemsQuantity"></app-confirmation-item-summary>
+        <app-confirmation-item-summary name="Items quantity" [value]="summary().productsQuantity"></app-confirmation-item-summary>
         <app-confirmation-item-summary name="Payment Method" [value]="summary().paymentMethod"></app-confirmation-item-summary>
         <hr class="w-full my-4 border-gray-200 dark:border-gray-700">
         <div class="flex justify-between">
             <p class="text-xl font-bold text-neutral-600">TOTAL:</p>
-            <p>$ {{ summary().total }}</p>
+            <p>$ {{ summary().amount }}</p>
         </div>
         <div class="flex justify-center my-8">
             <button appCheckoutButton>
