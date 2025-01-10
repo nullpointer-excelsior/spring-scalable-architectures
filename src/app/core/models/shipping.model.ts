@@ -5,4 +5,7 @@ export enum Delivery {
 
 export interface ShippingModel {
     delivery: Delivery;
+    fullname: string;
+    address: string;
+    city: string;
 }

@@ -16,9 +16,8 @@ import { Action, Selector, State, StateContext } from "@ngxs/store";
     defaults: {
         billing: {
             contactInfo: {
+                dni: '',
                 fullname: '',
-                address: '',
-                city: ''
             },
             payment: {
                 method: PaymentMethod.CreditCard,
@@ -32,6 +31,9 @@ import { Action, Selector, State, StateContext } from "@ngxs/store";
         },
         shipping: {
             delivery: Delivery.Standard,
+            fullname: '',
+            address: '',
+            city: ''
         }
     }
 })
@@ -74,10 +76,15 @@ export class CheckoutState {
             billing: {
                 ...state.billing,
                 contactInfo: {
+                    dni: '12345678-5',
                     fullname: user.fullname,
-                    address: user.address.street,
-                    city: user.address.city
                 }
+            },
+            shipping: {
+                delivery: Delivery.Standard,
+                fullname: user.fullname,
+                address: user.address.street,
+                city: user.address.city                
             }
         })
         ctx.dispatch([
@@ -87,8 +94,8 @@ export class CheckoutState {
     }
 
     @Selector()
-    static getShippingDelivery(state: CheckoutModel) {
-        return state.shipping.delivery;
+    static getShipping(state: CheckoutModel) {
+        return state.shipping;
     }
 
     @Selector()
@@ -99,12 +106,11 @@ export class CheckoutState {
     @Selector()
     static getBillingForm(state: CheckoutModel) {
         const { billing } = state
-        const { fullname, address, city } = billing.contactInfo
+        const { fullname, dni} = billing.contactInfo
         const { cardName, cardNumber, expiration, cvv } = billing.payment.details
         return {
+            dni,
             fullname,
-            address,
-            city,
             cardName,
             cardNumber,
             expiration,

@@ -1,8 +1,7 @@
 
 export interface ContactInfoModel {
+    dni: string;
     fullname: string;
-    address: string;
-    city: string;
 }
 
 export interface CreditCardModel {

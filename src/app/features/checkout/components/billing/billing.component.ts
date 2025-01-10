@@ -35,9 +35,8 @@ export class BillingComponent {
     const value = this.form.value
     this.store.dispatch(new SetBillingAction({
       contactInfo: {
+        dni: value.dni,
         fullname: value.fullname,
-        address: value.address,
-        city: value.city,
       },
       payment: {
         method: PaymentMethod.CreditCard,

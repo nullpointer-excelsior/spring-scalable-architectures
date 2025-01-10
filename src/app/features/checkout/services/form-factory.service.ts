@@ -13,9 +13,8 @@ export class FormFactoryService {
     createBillingForm() {
         const billing = this.store.selectSnapshot(CheckoutState.getBillingForm)
         return this.formBuilder.group({
+            dni: [billing.dni, Validators.required],
             fullname: [billing.fullname, Validators.required],
-            address: [billing.address, Validators.required],
-            city: [billing.city, Validators.required],
             cardName: [billing.cardName, Validators.required],
             cardNumber: [billing.cardNumber, Validators.required],
             expiration: [billing.expiration, Validators.required],
@@ -25,13 +24,12 @@ export class FormFactoryService {
     }
 
     createShippingForm() {
-        const delivery = this.store.selectSnapshot(CheckoutState.getShippingDelivery)
-        const billing = this.store.selectSnapshot(CheckoutState.getBillingForm)
+        const shipping = this.store.selectSnapshot(CheckoutState.getShipping)
         return this.formBuilder.group({
-            delivery: [delivery, Validators.required],
-            fullname: [billing.fullname, Validators.required],
-            address: [billing.address, Validators.required],
-            city: [billing.city, Validators.required],
+            delivery: [shipping.delivery, Validators.required],
+            fullname: [shipping.fullname, Validators.required],
+            address: [shipping.address, Validators.required],
+            city: [shipping.city, Validators.required],
         })
     }
 }

@@ -36,8 +36,12 @@ export class ShippingComponent {
   }
 
   onContinue() {
+    const value = this.form.value
     this.store.dispatch(new SetShippingAction({
-      delivery: this.form.value.delivery
+      delivery: value.delivery,
+      fullname: value.fullname,
+      address: value.address,
+      city: value.city
     }))
   }
 
