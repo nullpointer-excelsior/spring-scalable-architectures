@@ -42,10 +42,7 @@ export class CartState {
   @Action(UpdateCartProductAction)
   updateCartProductAction(ctx: StateContext<CartModel>, { product }: UpdateCartProductAction) {
     const state = ctx.getState();
-    const products = [
-      ...state.products.filter(p => p.sku !== product.sku),
-      product
-    ]
+    const products = this.cart.updateProduct(product, state.products)
     ctx.dispatch(new UpdateCartProductsAction(products))
   }
 
