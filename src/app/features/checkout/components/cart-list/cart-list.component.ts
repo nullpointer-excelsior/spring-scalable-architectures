@@ -1,8 +1,7 @@
 import { Component, inject, input } from '@angular/core';
 import { ProductModel } from '@core/models/product.model';
-import { DeleteCartProductAction } from '@core/store/actions/delete-cart-product.action';
-import { UpdateCartProductAction } from '@core/store/actions/update-cart-product.action';
 import { Store } from '@ngxs/store';
+import { DeleteCartProductAction, UpdateCartProductAction } from '@core/store/actions/cart.actions';
 
 @Component({
   selector: 'app-cart-list',

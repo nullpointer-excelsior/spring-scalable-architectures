@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Action, Selector, State } from "@ngxs/store";
-import { SetCurrentStep as SetCheckoutCurrentStep } from "@core/store/actions/set-current-step.action";
+import { SetCurrentStep } from "@core/store/actions/ui.actions";
 
 export interface UI {
     checkoutSteps: {
@@ -21,8 +21,8 @@ export interface UI {
 })
 export class UIState {
 
-    @Action(SetCheckoutCurrentStep)
-    setCheckoutCurrentStep(ctx: any, action: SetCheckoutCurrentStep) {
+    @Action(SetCurrentStep)
+    setCheckoutCurrentStep(ctx: any, action: SetCurrentStep) {
         const state = ctx.getState();
         ctx.setState({
             ...state,

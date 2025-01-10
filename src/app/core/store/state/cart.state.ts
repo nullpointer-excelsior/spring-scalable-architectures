@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
 import { CartModel } from '@core/models/cart.model';
 import { ProductModel } from '@core/models/product.model';
-import { SetCartAction } from '@core/store/actions/set-cart.action';
-import { UpdateCheckoutProductsAction as UpdateCartProductsAction } from '@core/store/actions/update-checkout-products.action';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { DeleteCartProductAction } from '@core/store/actions/delete-cart-product.action';
 import { CartService } from '@core/services/cart.service';
-import { UpdateCartProductAction } from '@core/store/actions/update-cart-product.action';
+import { DeleteCartProductAction, SetCartAction, UpdateCartProductAction, UpdateCartProductsAction } from '@core/store/actions/cart.actions';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 
 @State<CartModel>({
   name: 'cart',

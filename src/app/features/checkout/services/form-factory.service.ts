@@ -26,8 +26,12 @@ export class FormFactoryService {
 
     createShippingForm() {
         const delivery = this.store.selectSnapshot(CheckoutState.getShippingDelivery)
+        const billing = this.store.selectSnapshot(CheckoutState.getBillingForm)
         return this.formBuilder.group({
             delivery: [delivery, Validators.required],
+            fullname: [billing.fullname, Validators.required],
+            address: [billing.address, Validators.required],
+            city: [billing.city, Validators.required],
         })
     }
 }

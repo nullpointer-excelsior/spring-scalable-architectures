@@ -1,13 +1,12 @@
-import { Component, inject, Signal } from '@angular/core';
-import { ProductModel } from '@core/models/product.model';
-import { SetCurrentStep } from '@core/store/actions/set-current-step.action';
+import { Component, inject } from '@angular/core';
 import { CartState } from '@core/store/state/cart.state';
+import { CheckoutState } from '@core/store/state/checkout.state';
 import { CartListComponent } from "@features/checkout/components/cart-list/cart-list.component";
 import { ConfirmationItemSummaryComponent } from "@features/checkout/components/confirmation-item-summary/confirmation-item-summary.component";
 import { Store } from '@ngxs/store';
 import { BorderIndicatorDirective } from '@shared/directives/border-indicator.directive';
 import { CheckoutButtonDirective } from '@shared/directives/checkout-button.directive';
-import { CheckoutState } from '@core/store/state/checkout.state';
+import { SetCurrentStep } from '@core/store/actions/ui.actions';
 
 @Component({
   selector: 'app-confirmation',
@@ -22,7 +21,7 @@ import { CheckoutState } from '@core/store/state/checkout.state';
 export class ConfirmationComponent {
   
   private store: Store = inject(Store);
-  products: Signal<ProductModel[]> = this.store.selectSignal(CartState.getProducts);
+  products = this.store.selectSignal(CartState.getProducts);
   summary = this.store.selectSignal(CheckoutState.getCheckoutSummary);
 
   constructor() {

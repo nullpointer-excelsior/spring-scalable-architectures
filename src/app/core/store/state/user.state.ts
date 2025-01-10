@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { UserModel } from '@core/models/user.model';
-import { SetUserAction } from '@core/store/actions/set-user.action';
+import { SetUserAction } from '@core/store/actions/user.actions';
 
 @State<UserModel>({
     name: 'user',

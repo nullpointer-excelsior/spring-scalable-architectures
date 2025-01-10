@@ -21,6 +21,13 @@
                 </tr>
             </thead>
             <tbody>
+                @if (products().length === 0) {
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <td class="p-4 text-center" colspan="5" >
+                        No hay productos
+                    </td>
+                </tr>
+                }
                 @for (product of products(); track $index) {
                 <tr
                     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
@@ -35,8 +42,7 @@
                             <div>
                                 <input
                                     class="bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2.5 py-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    [value]="product.quantity" 
-                                    (blur)="onProductQuantityChange($event, product)"
+                                    [value]="product.quantity" (blur)="onProductQuantityChange($event, product)"
                                     type="number" min="1" required />
                             </div>
                         </div>

@@ -2,12 +2,9 @@ import { PaymentMethod } from "@core/models/billing.model";
 import { CartModel } from "@core/models/cart.model";
 import { CheckoutModel } from "@core/models/checkout.model";
 import { Delivery } from "@core/models/shipping.model";
-import { CreateRandomCheckoutAction } from "@core/store/actions/create-random-checkout.action";
-import { SetBillingAction } from "@core/store/actions/set-billing.action";
-import { SetContactInfoAction } from "@core/store/actions/set-contact-info.action";
-import { SetShippingAction } from "@core/store/actions/set-shipping.action";
-import { SetUserAction } from "@core/store/actions/set-user.action";
-import { UpdateCheckoutProductsAction } from "@core/store/actions/update-checkout-products.action";
+import { UpdateCartProductsAction } from "@core/store/actions/cart.actions";
+import { CreateRandomCheckoutAction, SetBillingAction, SetContactInfoAction, SetShippingAction } from "@core/store/actions/checkout.actions";
+import { SetUserAction } from "@core/store/actions/user.actions";
 import { CartState } from "@core/store/state/cart.state";
 import { getCartProducts } from "@core/utils/get-cart-items";
 import { getRandomElements } from "@core/utils/get-random-elements";
@@ -85,7 +82,7 @@ export class CheckoutState {
         })
         ctx.dispatch([
             new SetUserAction(user),
-            new UpdateCheckoutProductsAction(products)
+            new UpdateCartProductsAction(products)
         ])
     }
 
