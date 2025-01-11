@@ -2,18 +2,16 @@ import { Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { PaymentMethod } from '@core/models/billing.model';
+import { SetBillingAction } from '@core/store/actions/checkout.actions';
+import { SetCurrentStep } from '@core/store/actions/ui.actions';
 import { FormFactoryService } from '@features/checkout/services/form-factory.service';
 import { Store } from '@ngxs/store';
 import { InputTextComponent } from "@shared/components/input-text/input-text.component";
-import { BorderIndicatorDirective } from '@shared/directives/border-indicator.directive';
 import { CheckoutButtonDirective } from '@shared/directives/checkout-button.directive';
-import { SetCurrentStep } from '@core/store/actions/ui.actions';
-import { SetBillingAction } from '@core/store/actions/checkout.actions';
 
 @Component({
   selector: 'app-billing',
   imports: [
-    BorderIndicatorDirective,
     InputTextComponent,
     CheckoutButtonDirective,
     RouterLink,

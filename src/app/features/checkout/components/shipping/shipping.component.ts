@@ -7,14 +7,12 @@ import { SetCurrentStep } from '@core/store/actions/ui.actions';
 import { FormFactoryService } from '@features/checkout/services/form-factory.service';
 import { Store } from '@ngxs/store';
 import { InputTextComponent } from '@shared/components/input-text/input-text.component';
-import { BorderIndicatorDirective } from '@shared/directives/border-indicator.directive';
 import { CheckoutButtonDirective } from '@shared/directives/checkout-button.directive';
 
 @Component({
   selector: 'app-shipping',
   imports: [
     CheckoutButtonDirective,
-    BorderIndicatorDirective,
     RouterLink,
     ReactiveFormsModule,
     InputTextComponent,

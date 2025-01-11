@@ -1,0 +1,11 @@
+<div class="flex items-center">
+    <div class="flex items-center justify-center w-8 h-8 rounded-full border-2" [ngClass]="{
+      'bg-blue-500 text-white border-blue-500': currentStep() >= step(),
+      'bg-gray-700 text-gray-300 border-gray-300': currentStep() < step()
+    }">
+        <a [routerLink]="link()" >
+            {{ step() }}
+        </a>
+    </div>
+    <span class="ml-2 text-sm font-medium text-neutral-200">{{ name() }}</span>
+</div>

@@ -1,19 +1,18 @@
-<div [formGroup]="form" appBorderIndicator class="flex flex-col">
-  <div class="flex flex-row">
-      <div appBorderIndicator class="basis-1/2">
+<div [formGroup]="form" class="container-step flex flex-col">
+  <div class="flex flex-row items-center">
+      <div class="basis-1/2 card-step">
           <app-input-text class="mx-2 h-20" title="Fullname" formControlName="fullname"></app-input-text>
           <app-input-text class="mx-2" title="Address" formControlName="address"></app-input-text>
           <app-input-text class="mx-2" title="City" formControlName="city"></app-input-text>
       </div>
-      <div appBorderIndicator class="basis-1/2">
+      <div class="basis-1/2 card-step">
         <fieldset class="space-y-4">
-          <legend class="sr-only">Delivery</legend>
           <div>
             <label for="DeliveryStandard"
-              class="flex cursor-pointer justify-between gap-4 rounded-lg border border-gray-100 bg-white p-4 text-sm font-medium shadow-sm hover:border-gray-200 has-[:checked]:border-blue-500 has-[:checked]:ring-1 has-[:checked]:ring-blue-500">
+              class="flex cursor-pointer justify-between gap-4 rounded-lg p-4 text-sm font-medium shadow-sm hover:border-gray-200 has-[:checked]:bg-black has-[:checked]:border-blue-500 has-[:checked]:ring-1 has-[:checked]:ring-blue-500">
               <div>
-                <p class="text-gray-700">Regular (3 - 7 Days)</p>
-                <p class="mt-1 text-gray-900">FREE</p>
+                <p class="text-gray-400">Regular (3 - 7 Days)</p>
+                <p class="mt-1 text-white">FREE</p>
               </div>
     
               <input id="DeliveryStandard" type="radio" [value]="deliveryOptions.Standard" formControlName="delivery"
@@ -23,10 +22,10 @@
     
           <div>
             <label for="DeliveryPriority"
-              class="flex cursor-pointer justify-between gap-4 rounded-lg border border-gray-100 bg-white p-4 text-sm font-medium shadow-sm hover:border-gray-200 has-[:checked]:border-blue-500 has-[:checked]:ring-1 has-[:checked]:ring-blue-500">
+              class="flex cursor-pointer justify-between gap-4 rounded-lg p-4 text-sm font-medium shadow-sm has-[:checked]:bg-black hover:border-gray-200 has-[:checked]:border-blue-500 has-[:checked]:ring-1 has-[:checked]:ring-blue-500">
               <div>
-                <p class="text-gray-700">Express (1 - 3 Days)</p>
-                <p class="mt-1 text-gray-900">$9.99</p>
+                <p class="text-gray-400">Express (1 - 3 Days)</p>
+                <p class="mt-1 text-white">$9.99</p>
               </div>
     
               <input id="DeliveryPriority" type="radio" [value]="deliveryOptions.Express" formControlName="delivery"

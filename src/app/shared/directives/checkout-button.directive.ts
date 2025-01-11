@@ -23,8 +23,8 @@ export class CheckoutButtonDirective {
   ngOnInit() {
     this.el.nativeElement.classList.add(
       'inline-block',
-      'rounded',
-      'bg-indigo-600',
+      'rounded-full',
+      'bg-blue-600',
       'px-8', 'py-3',
       'w-56',
       'text-sm',
@@ -35,7 +35,7 @@ export class CheckoutButtonDirective {
       'hover:shadow-xl',
       'focus:outline-none',
       'focus:ring',
-      'active:bg-indigo-500'
+      'active:bg-blue-500'
     );
   }
 
