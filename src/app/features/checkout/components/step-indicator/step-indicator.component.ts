@@ -16,4 +16,5 @@ export class StepIndicatorComponent {
   step = input(0)
   name = input('')
   link = input('')
+  color = input('blue-500')
 }

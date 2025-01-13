@@ -24,7 +24,7 @@ export class CheckoutButtonDirective {
     this.el.nativeElement.classList.add(
       'inline-block',
       'rounded-full',
-      'bg-blue-600',
+      'bg-orange-600',
       'px-8', 'py-3',
       'w-56',
       'text-sm',
@@ -35,7 +35,7 @@ export class CheckoutButtonDirective {
       'hover:shadow-xl',
       'focus:outline-none',
       'focus:ring',
-      'active:bg-blue-500'
+      'active:bg-orange-500'
     );
   }
 

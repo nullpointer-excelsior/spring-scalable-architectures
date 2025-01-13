@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { UIState } from '@core/store/state/ui.state';
 import { Store } from '@ngxs/store';
 import { StepIndicatorComponent } from "../step-indicator/step-indicator.component";
