@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface CartUseCases {
     Cart create(CreateCartRequest request);
-    Cart updateProducts(String cartId, List<CartProduct> products);
+    Cart updateProducts(Long cartId, List<CartProduct> products);
+    Cart findById(Long id);
 }

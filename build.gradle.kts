@@ -21,15 +21,25 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+	runtimeOnly("com.h2database:h2")
+
+
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.assertj:assertj-core:3.27.2")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
 	compileOnly("org.projectlombok:lombok:1.18.36")
 	annotationProcessor("org.projectlombok:lombok:1.18.36")
 
+	implementation("org.mapstruct:mapstruct:1.6.3")
+	annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
+
 	testCompileOnly("org.projectlombok:lombok:1.18.36")
 	testAnnotationProcessor("org.projectlombok:lombok:1.18.36")
+	testAnnotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
 }
 
 tasks.withType<Test> {

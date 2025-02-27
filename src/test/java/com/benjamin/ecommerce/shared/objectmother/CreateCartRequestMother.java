@@ -14,7 +14,7 @@ public class CreateCartRequestMother {
     }
 
     public static class CreateCartRequestBuilder {
-        private CartUser user = new CartUser("1", "john@company.com");
+        private CartUser user = new CartUser(1L, "john@company.com");
     private List<CartProduct> products = List.of(new CartProduct("1111", "guitar", 1000.0, 1));
 
         public CreateCartRequestBuilder withUser(CartUser user) {

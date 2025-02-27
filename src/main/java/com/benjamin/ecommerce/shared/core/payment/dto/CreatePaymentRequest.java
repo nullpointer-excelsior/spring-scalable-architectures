@@ -9,4 +9,4 @@ import java.util.Map;
 public record CreatePaymentRequest(
     @NotNull PaymentMethod method,
     @NotNull Map<String, String> details,
-    @Positive Integer amount) {}
+    @Positive Double amount) {}
