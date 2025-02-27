@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/carts")
 public class CartRestController {
 
   @Autowired private CartUseCases cartUseCases;

@@ -56,7 +56,7 @@ public class CartIntegrationTest {
     }
 
     @Test
-    @DisplayName("GIVEN no cart in database WHEN POST /cart with CreateCartRequest valid THEN response CartResponse OK")
+    @DisplayName("GIVEN no cart in database WHEN POST /carts with CreateCartRequest valid THEN response CartResponse OK")
     void createCartTest() throws Exception {
 
         var createCartRequest = CreateCartRequestMother.builder()
@@ -64,7 +64,7 @@ public class CartIntegrationTest {
                 .withProducts(new CartProduct("1", "guitar", 1000.0, 1))
                 .build();
 
-        mvc.perform(MockMvcRequestBuilders.post("/cart")
+        mvc.perform(MockMvcRequestBuilders.post("/carts")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(TestUtils.asJsonString(createCartRequest)))
@@ -81,7 +81,7 @@ public class CartIntegrationTest {
 
     @Test
     @DisplayName(
-            "GIVEN user not registered controller WHEN POST /cart with CreateCartRequest with user not registered THEN save new User")
+            "GIVEN user not registered controller WHEN POST /carts with CreateCartRequest with user not registered THEN save new User")
     void createCartAndSaveNewUserTest() throws Exception {
 
         var createCartRequest = CreateCartRequestMother.builder()
@@ -91,7 +91,7 @@ public class CartIntegrationTest {
 
         assertThat(this.cartUserRepository.count()).isEqualTo(0);
 
-        mvc.perform(MockMvcRequestBuilders.post("/cart")
+        mvc.perform(MockMvcRequestBuilders.post("/carts")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(TestUtils.asJsonString(createCartRequest)))
@@ -103,7 +103,7 @@ public class CartIntegrationTest {
 
     @Test
     @DisplayName(
-            "GIVEN user registered WHEN POST /cart with CreateCartRequest with user registered THEN not save new User")
+            "GIVEN user registered WHEN POST /carts with CreateCartRequest with user registered THEN not save new User")
     void createCartAndDonNotSaveNewUserTest() throws Exception {
 
         var persistedUser = this.cartUserRepository.save(
@@ -116,7 +116,7 @@ public class CartIntegrationTest {
 
         assertThat(this.cartUserRepository.count()).isEqualTo(1);
 
-        mvc.perform(MockMvcRequestBuilders.post("/cart")
+        mvc.perform(MockMvcRequestBuilders.post("/carts")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(TestUtils.asJsonString(createCartRequest)))
@@ -129,7 +129,7 @@ public class CartIntegrationTest {
     @Test
     @Transactional
     @DisplayName(
-            "GIVEN cart created WHEN PUT /cart/{id}/products with valid ProductModel list THEN response CartResponse OK")
+            "GIVEN cart created WHEN PUT /carts/{id}/products with valid ProductModel list THEN response CartResponse OK")
     public void updateCartProductsValidTest() throws Exception {
         var savedCart = createCart();
         var request = new UpdateProductsRequest(List.of(
@@ -152,7 +152,7 @@ public class CartIntegrationTest {
                         .quantity(1)
                         .build()));
 
-        mvc.perform(MockMvcRequestBuilders.put("/cart/{id}/products", savedCart.getId())
+        mvc.perform(MockMvcRequestBuilders.put("/carts/{id}/products", savedCart.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(TestUtils.asJsonString(request)))
@@ -166,7 +166,7 @@ public class CartIntegrationTest {
     }
 
     @Test
-    @DisplayName("GIVEN no cart created WHEN PUT /cart/999/products with cart not found THEN response NotFound")
+    @DisplayName("GIVEN no cart created WHEN PUT /carts/999/products with cart not found THEN response NotFound")
     void updateProductWithCartNotFoundTest() throws Exception {
         var request = new UpdateProductsRequest(List.of(CartProduct.builder()
                 .sku("1")
@@ -175,7 +175,7 @@ public class CartIntegrationTest {
                 .quantity(1)
                 .build()));
 
-        mvc.perform(MockMvcRequestBuilders.put("/cart/999/products")
+        mvc.perform(MockMvcRequestBuilders.put("/carts/999/products")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(TestUtils.asJsonString(request)))
@@ -185,11 +185,11 @@ public class CartIntegrationTest {
 
     @Test
     @Transactional
-    @DisplayName("GIVEN cart created WHEN GET /cart/1 THEN cart found by Id")
+    @DisplayName("GIVEN cart created WHEN GET /carts/1 THEN cart found by Id")
     void cartFindById() throws Exception {
         var savedCart = createCart();
 
-        mvc.perform(MockMvcRequestBuilders.get("/cart/" + savedCart.getId()).contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.get("/carts/" + savedCart.getId()).contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists())
@@ -201,10 +201,10 @@ public class CartIntegrationTest {
     }
 
     @ParameterizedTest
-    @DisplayName("GIVEN caty created WHEN POST /cart with invalid CreateCartRequest THEN response BadRequest")
+    @DisplayName("GIVEN caty created WHEN POST /carts with invalid CreateCartRequest THEN response BadRequest")
     @MethodSource("invalidCartRequests")
     void createInvalidCartTest(CreateCartRequest request) throws Exception {
-        mvc.perform(MockMvcRequestBuilders.post("/cart")
+        mvc.perform(MockMvcRequestBuilders.post("/carts")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(TestUtils.asJsonString(request)))
@@ -237,11 +237,11 @@ public class CartIntegrationTest {
     @Transactional
     @ParameterizedTest
     @DisplayName(
-            "GIVEN cart created WHEN PUT /cart/{id}/products with invalid ProductModel list THEN response BadRequest")
+            "GIVEN cart created WHEN PUT /carts/{id}/products with invalid ProductModel list THEN response BadRequest")
     @MethodSource("invalidProductRequests")
     void updateCartProductsInvalidTest(UpdateProductsRequest request) throws Exception {
         var savedCart = createCart();
-        mvc.perform(MockMvcRequestBuilders.put("/cart/{id}/products", savedCart.getId())
+        mvc.perform(MockMvcRequestBuilders.put("/carts/{id}/products", savedCart.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(TestUtils.asJsonString(request)))
