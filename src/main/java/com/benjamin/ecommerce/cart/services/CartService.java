@@ -62,8 +62,9 @@ public class CartService implements CartUseCases {
 
     @Override
     public Cart findById(Long id) {
-        var cart = this.cartRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Cart not found"));
-        return this.cartMapper.toModel(cart);
+        return this.cartRepository.findById(id)
+                .map(this.cartMapper::toModel)
+                .orElseThrow(() -> new NoSuchElementException("Cart not found"));
     }
 
     private CartUserEntity getExistingUserOrCreateUser(CartUser user) {
