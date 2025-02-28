@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface ProductUseCases {
     List<Product> findAll();
+    void updateQuantity(String sku, Integer quantity);
 }

@@ -5,6 +5,7 @@ import com.benjamin.ecommerce.products.entities.ProductEntity;
 import com.benjamin.ecommerce.products.repositories.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
