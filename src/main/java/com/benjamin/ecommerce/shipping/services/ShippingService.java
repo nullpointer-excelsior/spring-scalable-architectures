@@ -37,4 +37,11 @@ public class ShippingService implements ShippingUseCases {
         log.info("shipping-created:{}", shippingEntity);
         return shippingMapper.toModel(shippingEntity);
     }
+
+    @Override
+    public Shipping update(Shipping shipping) {
+        var entity = shippingMapper.toEntity(shipping);
+        shippingRepository.save(entity);
+        return shippingMapper.toModel(entity);
+    }
 }
