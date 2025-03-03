@@ -1,8 +1,8 @@
 package com.benjamin.ecommerce.purchase.restcontrollers;
 
-import com.benjamin.ecommerce.shared.core.purchase.PurchaseProcessCoordinator;
-import com.benjamin.ecommerce.shared.core.purchase.dto.CreatePurchaseRequest;
-import com.benjamin.ecommerce.shared.core.purchase.dto.PurchaseCreatedResponse;
+import com.benjamin.ecommerce.purchase.PurchaseProcessCoordinator;
+import com.benjamin.ecommerce.purchase.dto.CreatePurchaseRequest;
+import com.benjamin.ecommerce.purchase.dto.PurchaseCreatedResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

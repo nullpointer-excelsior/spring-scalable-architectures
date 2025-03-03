@@ -1,6 +1,6 @@
 package com.benjamin.ecommerce.shared.objectmother;
 
-import com.benjamin.ecommerce.shared.core.products.models.Product;
+import com.benjamin.ecommerce.products.models.Product;
 
 public class ProductModelMother {
 

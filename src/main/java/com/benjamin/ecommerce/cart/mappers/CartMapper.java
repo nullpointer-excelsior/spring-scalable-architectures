@@ -1,7 +1,7 @@
 package com.benjamin.ecommerce.cart.mappers;
 
 import com.benjamin.ecommerce.cart.entities.CartEntity;
-import com.benjamin.ecommerce.shared.core.cart.models.Cart;
+import com.benjamin.ecommerce.cart.models.Cart;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 

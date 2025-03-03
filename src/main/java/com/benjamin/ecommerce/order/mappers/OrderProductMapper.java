@@ -1,7 +1,7 @@
 package com.benjamin.ecommerce.order.mappers;
 
 import com.benjamin.ecommerce.order.entities.OrderProductEntity;
-import com.benjamin.ecommerce.shared.core.order.models.OrderProduct;
+import com.benjamin.ecommerce.order.dto.models.OrderProduct;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;

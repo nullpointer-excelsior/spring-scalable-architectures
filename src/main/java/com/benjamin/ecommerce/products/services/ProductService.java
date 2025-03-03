@@ -2,8 +2,8 @@ package com.benjamin.ecommerce.products.services;
 
 import com.benjamin.ecommerce.products.mappers.ProductMapper;
 import com.benjamin.ecommerce.products.repositories.ProductRepository;
-import com.benjamin.ecommerce.shared.core.products.ProductUseCases;
-import com.benjamin.ecommerce.shared.core.products.models.Product;
+import com.benjamin.ecommerce.products.ProductUseCases;
+import com.benjamin.ecommerce.products.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

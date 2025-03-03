@@ -1,8 +1,8 @@
 package com.benjamin.ecommerce.payment.restcontrollers;
 
-import com.benjamin.ecommerce.shared.core.payment.PaymentUseCases;
-import com.benjamin.ecommerce.shared.core.payment.dto.ValidatePaymentMethodRequest;
-import com.benjamin.ecommerce.shared.core.payment.dto.ValidatePaymentMethodResponse;
+import com.benjamin.ecommerce.payment.PaymentUseCases;
+import com.benjamin.ecommerce.payment.dto.ValidatePaymentMethodRequest;
+import com.benjamin.ecommerce.payment.dto.ValidatePaymentMethodResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,7 +1,7 @@
 package com.benjamin.ecommerce.purchase.events;
 
-import com.benjamin.ecommerce.shared.core.payment.events.PaymentCreatedEvent;
-import com.benjamin.ecommerce.shared.core.purchase.PurchaseProcessCoordinator;
+import com.benjamin.ecommerce.payment.events.PaymentCreatedEvent;
+import com.benjamin.ecommerce.purchase.PurchaseProcessCoordinator;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;

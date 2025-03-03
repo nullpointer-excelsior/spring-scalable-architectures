@@ -1,7 +1,7 @@
 package com.benjamin.ecommerce.products.restcontrollers;
 
-import com.benjamin.ecommerce.shared.core.products.ProductUseCases;
-import com.benjamin.ecommerce.shared.core.products.models.Product;
+import com.benjamin.ecommerce.products.ProductUseCases;
+import com.benjamin.ecommerce.products.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

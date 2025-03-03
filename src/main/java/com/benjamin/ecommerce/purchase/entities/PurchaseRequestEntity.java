@@ -1,14 +1,12 @@
 package com.benjamin.ecommerce.purchase.entities;
 
-import com.benjamin.ecommerce.shared.core.payment.models.PaymentMethod;
+import com.benjamin.ecommerce.payment.models.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @Entity
 @Table(name = "purchase_requests")

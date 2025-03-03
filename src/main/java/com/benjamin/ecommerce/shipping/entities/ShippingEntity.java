@@ -1,11 +1,7 @@
 package com.benjamin.ecommerce.shipping.entities;
 
-import com.benjamin.ecommerce.order.entities.OrderProductEntity;
-import com.benjamin.ecommerce.shared.core.order.models.OrderStatus;
-import com.benjamin.ecommerce.shared.core.shipping.models.Delivery;
-import com.benjamin.ecommerce.shared.core.shipping.models.ShippingStatus;
+import com.benjamin.ecommerce.shipping.models.ShippingStatus;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Positive;
 import lombok.*;
 
 import java.time.LocalDateTime;

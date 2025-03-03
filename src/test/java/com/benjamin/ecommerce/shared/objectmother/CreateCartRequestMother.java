@@ -1,8 +1,8 @@
 package com.benjamin.ecommerce.shared.objectmother;
 
-import com.benjamin.ecommerce.shared.core.cart.dto.CreateCartRequest;
-import com.benjamin.ecommerce.shared.core.cart.models.CartProduct;
-import com.benjamin.ecommerce.shared.core.cart.models.CartUser;
+import com.benjamin.ecommerce.cart.dto.CreateCartRequest;
+import com.benjamin.ecommerce.cart.models.CartProduct;
+import com.benjamin.ecommerce.cart.models.CartUser;
 
 import java.util.Collections;
 import java.util.List;

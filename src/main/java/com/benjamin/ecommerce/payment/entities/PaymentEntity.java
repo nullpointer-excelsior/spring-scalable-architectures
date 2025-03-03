@@ -1,7 +1,7 @@
 package com.benjamin.ecommerce.payment.entities;
 
-import com.benjamin.ecommerce.shared.core.payment.models.PaymentMethod;
-import com.benjamin.ecommerce.shared.core.payment.models.PaymentStatus;
+import com.benjamin.ecommerce.payment.models.PaymentMethod;
+import com.benjamin.ecommerce.payment.models.PaymentStatus;
 import jakarta.validation.constraints.Positive;
 
 import jakarta.persistence.*;

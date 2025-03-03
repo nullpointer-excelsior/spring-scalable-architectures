@@ -1,5 +1,5 @@
 package com.benjamin.ecommerce.order.entities;
-import com.benjamin.ecommerce.shared.core.order.models.OrderStatus;
+import com.benjamin.ecommerce.order.dto.models.OrderStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
 import lombok.*;

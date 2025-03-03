@@ -7,10 +7,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.benjamin.ecommerce.payment.restcontrollers.PaymentMethodRestController;
 import com.benjamin.ecommerce.shared.TestUtils;
-import com.benjamin.ecommerce.shared.core.payment.PaymentUseCases;
-import com.benjamin.ecommerce.shared.core.payment.dto.ValidatePaymentMethodRequest;
-import com.benjamin.ecommerce.shared.core.payment.dto.ValidatePaymentMethodResponse;
-import com.benjamin.ecommerce.shared.core.payment.models.PaymentMethod;
+import com.benjamin.ecommerce.payment.dto.ValidatePaymentMethodRequest;
+import com.benjamin.ecommerce.payment.dto.ValidatePaymentMethodResponse;
+import com.benjamin.ecommerce.payment.models.PaymentMethod;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

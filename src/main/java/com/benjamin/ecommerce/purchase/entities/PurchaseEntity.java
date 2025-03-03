@@ -1,6 +1,6 @@
 package com.benjamin.ecommerce.purchase.entities;
 
-import com.benjamin.ecommerce.shared.core.purchase.models.PurchaseStatus;
+import com.benjamin.ecommerce.purchase.models.PurchaseStatus;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -2,12 +2,12 @@ package com.benjamin.ecommerce.payment.services;
 
 import com.benjamin.ecommerce.payment.entities.PaymentEntity;
 import com.benjamin.ecommerce.payment.repositories.PaymentRepository;
-import com.benjamin.ecommerce.shared.core.payment.PaymentUseCases;
-import com.benjamin.ecommerce.shared.core.payment.dto.ValidatePaymentMethodRequest;
-import com.benjamin.ecommerce.shared.core.payment.dto.ValidatePaymentMethodResponse;
-import com.benjamin.ecommerce.shared.core.payment.models.Payment;
-import com.benjamin.ecommerce.shared.core.payment.models.PaymentStatus;
-import com.benjamin.ecommerce.shared.core.purchase.dto.CreatePayment;
+import com.benjamin.ecommerce.payment.PaymentUseCases;
+import com.benjamin.ecommerce.payment.dto.ValidatePaymentMethodRequest;
+import com.benjamin.ecommerce.payment.dto.ValidatePaymentMethodResponse;
+import com.benjamin.ecommerce.payment.models.Payment;
+import com.benjamin.ecommerce.payment.models.PaymentStatus;
+import com.benjamin.ecommerce.purchase.dto.CreatePayment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

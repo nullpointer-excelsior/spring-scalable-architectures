@@ -2,10 +2,10 @@ package com.benjamin.ecommerce.order.services;
 
 import com.benjamin.ecommerce.order.mappers.OrderMapper;
 import com.benjamin.ecommerce.order.repositories.OrderRepository;
-import com.benjamin.ecommerce.shared.core.order.OrderUseCases;
-import com.benjamin.ecommerce.shared.core.order.models.Order;
-import com.benjamin.ecommerce.shared.core.order.models.OrderStatus;
-import com.benjamin.ecommerce.shared.core.purchase.dto.CreateOrder;
+import com.benjamin.ecommerce.order.OrderUseCases;
+import com.benjamin.ecommerce.order.dto.models.Order;
+import com.benjamin.ecommerce.order.dto.models.OrderStatus;
+import com.benjamin.ecommerce.purchase.dto.CreateOrder;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

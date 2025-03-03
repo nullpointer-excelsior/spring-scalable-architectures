@@ -1,9 +1,9 @@
 package com.benjamin.ecommerce.cart.controllers;
 
-import com.benjamin.ecommerce.shared.core.cart.CartUseCases;
-import com.benjamin.ecommerce.shared.core.cart.dto.CreateCartRequest;
-import com.benjamin.ecommerce.shared.core.cart.dto.UpdateProductsRequest;
-import com.benjamin.ecommerce.shared.core.cart.models.Cart;
+import com.benjamin.ecommerce.cart.CartUseCases;
+import com.benjamin.ecommerce.cart.dto.CreateCartRequest;
+import com.benjamin.ecommerce.cart.dto.UpdateProductsRequest;
+import com.benjamin.ecommerce.cart.models.Cart;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,8 +1,7 @@
 package com.benjamin.ecommerce.shipping.entities;
 
-import com.benjamin.ecommerce.shared.core.shipping.models.DeliveryOption;
+import com.benjamin.ecommerce.shipping.models.DeliveryOption;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 import java.util.UUID;
