@@ -20,6 +20,7 @@ import com.benjamin.ecommerce.shipping.models.Delivery;
 import com.benjamin.ecommerce.shared.integration.EventBus;
 import com.benjamin.ecommerce.shared.utils.MapBuilder;
 import com.benjamin.ecommerce.shipping.models.DeliveryOption;
+import com.benjamin.ecommerce.shipping.models.Shipping;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -116,8 +117,20 @@ public class PurchaseProcessCoordinatorService implements PurchaseProcessCoordin
     }
 
     @Override
-    public void process(Order order) {}
+    public void process(Order order) {
+        purchaseRepository.findById(order.purchaseId()).ifPresent(purchase -> {
+            purchase.setStatus(PurchaseStatus.ORDERED);
+            purchaseRepository.save(purchase);
+        });
+
+    }
 
     @Override
-    public void process(Delivery delivery) {}
+    public void process(Shipping shipping) {
+        purchaseRepository.findById(shipping.purchaseId()).ifPresent(purchase -> {
+            purchase.setStatus(PurchaseStatus.SHIPPED);
+            purchaseRepository.save(purchase);
+        });
+    }
+
 }
