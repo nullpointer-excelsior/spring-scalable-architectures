@@ -1,6 +1,6 @@
 package com.benjamin.ecommerce.order.dto;
 
-import com.benjamin.ecommerce.order.dto.models.OrderProduct;
+import com.benjamin.ecommerce.order.models.OrderProduct;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;

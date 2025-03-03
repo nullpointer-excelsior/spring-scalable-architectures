@@ -1,24 +1,25 @@
 package com.benjamin.ecommerce.purchase.services;
 
+import com.benjamin.ecommerce.products.UpdateProductQuantity;
+import com.benjamin.ecommerce.purchase.dto.*;
 import com.benjamin.ecommerce.purchase.entities.PurchaseEntity;
+import com.benjamin.ecommerce.shared.integration.events.CreateShippingEvent;
 import com.benjamin.ecommerce.purchase.repositories.PurchaseRepository;
 import com.benjamin.ecommerce.purchase.repositories.PurchaseRequestRepository;
 import com.benjamin.ecommerce.purchase.entities.PurchaseRequestEntity;
-import com.benjamin.ecommerce.order.dto.models.Order;
-import com.benjamin.ecommerce.order.dto.models.OrderProduct;
+import com.benjamin.ecommerce.order.models.Order;
+import com.benjamin.ecommerce.order.models.OrderProduct;
 import com.benjamin.ecommerce.payment.models.Payment;
 import com.benjamin.ecommerce.payment.models.PaymentStatus;
 import com.benjamin.ecommerce.purchase.PurchaseProcessCoordinator;
-import com.benjamin.ecommerce.purchase.dto.CreateOrder;
-import com.benjamin.ecommerce.purchase.dto.CreatePayment;
-import com.benjamin.ecommerce.purchase.dto.CreatePurchaseRequest;
-import com.benjamin.ecommerce.purchase.dto.PurchaseCreatedResponse;
-import com.benjamin.ecommerce.purchase.events.CreateOrderEvent;
-import com.benjamin.ecommerce.purchase.events.CreatePaymentEvent;
+import com.benjamin.ecommerce.shared.integration.events.CreateOrderEvent;
+import com.benjamin.ecommerce.shared.integration.events.CreatePaymentEvent;
 import com.benjamin.ecommerce.purchase.models.PurchaseStatus;
+import com.benjamin.ecommerce.shared.integration.events.UpdateProductStockEvent;
 import com.benjamin.ecommerce.shipping.models.Delivery;
 import com.benjamin.ecommerce.shared.integration.EventBus;
 import com.benjamin.ecommerce.shared.utils.MapBuilder;
+import com.benjamin.ecommerce.shipping.models.DeliveryOption;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -84,18 +85,33 @@ public class PurchaseProcessCoordinatorService implements PurchaseProcessCoordin
     @SuppressWarnings("unchecked")
     @Override
     public void process(Payment payment) {
+
         if (payment.status().equals(PaymentStatus.ACCEPTED)) {
+
             var purchase = purchaseRepository
                     .findById(payment.purchaseId())
                     .orElseThrow(() -> new NoSuchElementException("Purchase not found"));
             purchase.setStatus(PurchaseStatus.PAYED);
             var orderRequest = purchase.getPurchaseRequest().getOrderRequest();
+            var shippingRequest = purchase.getPurchaseRequest().getShippingRequest();
+            var orderProducts = (List<OrderProduct>) orderRequest.get("products");
             purchaseRepository.save(purchase);
+
             eventBus.dispatch(new CreateOrderEvent(CreateOrder.builder()
                     .purchaseId(purchase.getId())
                     .amount((Double) orderRequest.get("amount"))
-                    .products((List<OrderProduct>) orderRequest.get("products"))
+                    .products(orderProducts)
                     .build()));
+            eventBus.dispatch(new CreateShippingEvent(CreateShipping.builder()
+                    .purchaseId(purchase.getId())
+                    .address((String) shippingRequest.get("address"))
+                    .city((String) shippingRequest.get("city"))
+                    .fullname((String) shippingRequest.get("fullname"))
+                    .option((DeliveryOption) shippingRequest.get("option"))
+                    .build()));
+            eventBus.dispatch(new UpdateProductStockEvent(orderProducts.stream()
+                    .map(op -> new UpdateProductQuantity(op.sku(), op.quantity()))
+                    .toList()));
         }
     }
 

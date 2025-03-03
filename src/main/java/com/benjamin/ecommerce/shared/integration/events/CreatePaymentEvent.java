@@ -1,4 +1,4 @@
-package com.benjamin.ecommerce.purchase.events;
+package com.benjamin.ecommerce.shared.integration.events;
 
 import com.benjamin.ecommerce.purchase.dto.CreatePayment;
 import com.benjamin.ecommerce.shared.integration.Event;

@@ -1,8 +1,8 @@
 package com.benjamin.ecommerce.order.mappers;
 
 import com.benjamin.ecommerce.order.entities.OrderEntity;
-import com.benjamin.ecommerce.order.dto.models.Order;
-import com.benjamin.ecommerce.order.dto.models.OrderStatus;
+import com.benjamin.ecommerce.order.models.Order;
+import com.benjamin.ecommerce.order.models.OrderStatus;
 import com.benjamin.ecommerce.purchase.dto.CreateOrder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

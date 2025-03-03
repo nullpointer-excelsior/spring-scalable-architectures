@@ -1,5 +1,5 @@
 package com.benjamin.ecommerce.order.entities;
-import com.benjamin.ecommerce.order.dto.models.OrderStatus;
+import com.benjamin.ecommerce.order.models.OrderStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
@@ -18,6 +18,9 @@ public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(nullable = false)
+    private Long purchaseId;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;

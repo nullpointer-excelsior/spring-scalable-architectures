@@ -1,4 +1,4 @@
-package com.benjamin.ecommerce.order.dto.models;
+package com.benjamin.ecommerce.order.models;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

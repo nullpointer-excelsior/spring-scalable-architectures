@@ -1,4 +1,4 @@
-package com.benjamin.ecommerce.order.dto.models;
+package com.benjamin.ecommerce.order.models;
 
 public enum OrderStatus {
     CREATED,COMPLETED

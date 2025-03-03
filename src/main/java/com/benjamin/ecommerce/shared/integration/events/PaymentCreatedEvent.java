@@ -1,4 +1,4 @@
-package com.benjamin.ecommerce.payment.events;
+package com.benjamin.ecommerce.shared.integration.events;
 
 import com.benjamin.ecommerce.payment.models.Payment;
 import com.benjamin.ecommerce.shared.integration.Event;
