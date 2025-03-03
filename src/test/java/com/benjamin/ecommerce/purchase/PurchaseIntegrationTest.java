@@ -5,6 +5,9 @@ import com.benjamin.ecommerce.order.repositories.OrderRepository;
 import com.benjamin.ecommerce.payment.repositories.PaymentRepository;
 import com.benjamin.ecommerce.products.entities.ProductEntity;
 import com.benjamin.ecommerce.products.repositories.ProductRepository;
+import com.benjamin.ecommerce.purchase.entities.PurchaseEntity;
+import com.benjamin.ecommerce.purchase.entities.PurchaseRequestEntity;
+import com.benjamin.ecommerce.purchase.models.PurchaseStatus;
 import com.benjamin.ecommerce.purchase.repositories.PurchaseRepository;
 import com.benjamin.ecommerce.purchase.repositories.PurchaseRequestRepository;
 import com.benjamin.ecommerce.shared.TestUtils;
@@ -76,7 +79,7 @@ public class PurchaseIntegrationTest {
     }
 
     @Test
-    @DisplayName("GIVEN CreatePurchaseRequest WHEN POST /purchases/process THEN save Purchase and PurchaseRequest")
+    @DisplayName("GIVEN CreatePurchaseRequest WHEN POST /purchases/process THEN save PurchaseRequest")
     public void createPurchaseProcessAndSavePurchaseRequestEntityTest() throws Exception {
 
         var purchase = getCreatePurchaseRequest();
@@ -139,6 +142,33 @@ public class PurchaseIntegrationTest {
                 .isEqualTo(shipping.fullname());
         assertThat(purchaseRequestEntity.get().getShippingRequest().get("option"))
                 .isEqualTo(shipping.option().toString());
+    }
+
+    @Test
+    @DisplayName("GIVEN CreatePurchaseRequest WHEN POST /purchases/process THEN save Purchase")
+    public void createPurchaseProcessAndSavePurchaseEntityTest() throws Exception {
+
+        var purchase = getCreatePurchaseRequest();
+
+        var result = mvc.perform(MockMvcRequestBuilders.post("/purchases/process")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtils.asJsonString(purchase)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.purchaseRequestId").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.purchaseId").exists())
+                .andReturn();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        PurchaseCreatedResponse response =
+                objectMapper.readValue(result.getResponse().getContentAsString(), PurchaseCreatedResponse.class);
+        var purchaseEntity = purchaseRepository.findById(response.purchaseId());
+
+        assertThat(purchaseEntity).isNotEmpty().get()
+                .extracting(PurchaseEntity::getId, PurchaseEntity::getPurchaseRequest)
+                .isNotNull();
+
     }
 
     @Test

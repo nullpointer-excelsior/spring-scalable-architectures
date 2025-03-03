@@ -67,7 +67,7 @@ public class PurchaseProcessCoordinatorService implements PurchaseProcessCoordin
                 .build();
 
         var purchase = PurchaseEntity.builder()
-                .status(PurchaseStatus.PAYED)
+                .status(PurchaseStatus.CREATED)
                 .purchaseRequest(purchaseRequest)
                 .build();
 
