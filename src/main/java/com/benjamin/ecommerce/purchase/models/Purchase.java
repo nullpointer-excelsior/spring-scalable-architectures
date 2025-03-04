@@ -4,6 +4,6 @@ import com.benjamin.ecommerce.order.models.Order;
 import com.benjamin.ecommerce.payment.models.Payment;
 import com.benjamin.ecommerce.shipping.models.Delivery;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
-public record Purchase(@NotEmpty String id, @Valid Order order, @Valid Payment payment, @Valid Delivery delivery, PurchaseStatus status) {}
+public record Purchase(@NotNull Long id, @Valid Order order, @Valid Payment payment, @Valid Delivery delivery, PurchaseStatus status) {}

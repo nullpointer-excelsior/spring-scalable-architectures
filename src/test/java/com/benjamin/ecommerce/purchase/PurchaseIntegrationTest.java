@@ -5,6 +5,8 @@ import com.benjamin.ecommerce.order.repositories.OrderRepository;
 import com.benjamin.ecommerce.payment.repositories.PaymentRepository;
 import com.benjamin.ecommerce.products.entities.ProductEntity;
 import com.benjamin.ecommerce.products.repositories.ProductRepository;
+import com.benjamin.ecommerce.purchase.dto.PurchaseError;
+import com.benjamin.ecommerce.purchase.dto.PurchaseErrorReason;
 import com.benjamin.ecommerce.purchase.entities.PurchaseEntity;
 import com.benjamin.ecommerce.purchase.models.PurchaseStatus;
 import com.benjamin.ecommerce.purchase.repositories.PurchaseRepository;
@@ -16,6 +18,9 @@ import com.benjamin.ecommerce.payment.dto.CreatePaymentRequest;
 import com.benjamin.ecommerce.payment.models.PaymentMethod;
 import com.benjamin.ecommerce.purchase.dto.CreatePurchaseRequest;
 import com.benjamin.ecommerce.purchase.dto.PurchaseCreatedResponse;
+import com.benjamin.ecommerce.shared.components.TestEventListener;
+import com.benjamin.ecommerce.shared.integration.EventBus;
+import com.benjamin.ecommerce.shared.integration.events.PurchaseErrorEvent;
 import com.benjamin.ecommerce.shipping.dto.CreateShippingRequest;
 import com.benjamin.ecommerce.shipping.entities.ShippingEntity;
 import com.benjamin.ecommerce.shipping.mappers.ShippingMapper;
@@ -43,10 +48,12 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.awaitility.Awaitility.await;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes = CheckoutApplication.class)
@@ -75,10 +82,16 @@ public class PurchaseIntegrationTest {
     DeliveryRepository deliveryRepository;
 
     @Autowired
-    private ProductRepository productRepository;
+    ProductRepository productRepository;
 
     @Autowired
     ShippingMapper shippingMapper;
+
+    @Autowired
+    EventBus eventBus;
+
+    @Autowired
+    TestEventListener testEventListener;
 
     @BeforeEach
     void tearDown() {
@@ -88,6 +101,7 @@ public class PurchaseIntegrationTest {
         orderRepository.deleteAll();
         shippingRepository.deleteAll();
         productRepository.deleteAll();
+        testEventListener.reset();
     }
 
     @Test
@@ -173,11 +187,11 @@ public class PurchaseIntegrationTest {
         PurchaseCreatedResponse response = getPurchaseCreatedResponse(result);
         var purchaseEntity = purchaseRepository.findById(response.purchaseId());
 
-        assertThat(purchaseEntity).isNotEmpty().get()
+        assertThat(purchaseEntity)
+                .isNotEmpty()
+                .get()
                 .extracting(PurchaseEntity::getId, PurchaseEntity::getPurchaseRequest)
                 .isNotNull();
-
-
     }
 
     @Test
@@ -221,7 +235,7 @@ public class PurchaseIntegrationTest {
     }
 
     @Test
-    @DisplayName("GIVEN purchase created WHEN purchase successfully THEN purchase status is SHIPPED")
+    @DisplayName("GIVEN purchase created WHEN purchase successfully THEN purchase status is COMPLETED")
     public void createPurchaseProcessCompleteSuccessfullyTest() throws Exception {
 
         var purchase = getCreatePurchaseRequest();
@@ -236,7 +250,8 @@ public class PurchaseIntegrationTest {
                 .andReturn();
 
         var response = getPurchaseCreatedResponse(result);
-        var shippingEntity = shippingRepository.findByPurchaseId(response.purchaseId()).orElseThrow();
+        var shippingEntity =
+                shippingRepository.findByPurchaseId(response.purchaseId()).orElseThrow();
         shippingEntity.setStatus(ShippingStatus.DELIVERED);
         assertThat(shippingEntity.getDelivery()).isNotNull();
 
@@ -251,10 +266,59 @@ public class PurchaseIntegrationTest {
 
         var purchaseResult = purchaseRepository.findById(response.purchaseId());
         var shippingResult = shippingRepository.findByPurchaseId(response.purchaseId());
-        assertThat(purchaseResult).isNotEmpty().get().extracting(PurchaseEntity::getStatus).isEqualTo(PurchaseStatus.COMPLETED);
-        assertThat(shippingResult).isNotEmpty().get().extracting(ShippingEntity::getDeliveredAt).isNotNull();
-        assertThat(shippingResult).isNotEmpty().get().extracting(ShippingEntity::getStatus).isEqualTo(ShippingStatus.DELIVERED);
+        assertThat(purchaseResult)
+                .isNotEmpty()
+                .get()
+                .extracting(PurchaseEntity::getStatus)
+                .isEqualTo(PurchaseStatus.COMPLETED);
+        assertThat(shippingResult)
+                .isNotEmpty()
+                .get()
+                .extracting(ShippingEntity::getDeliveredAt)
+                .isNotNull();
+        assertThat(shippingResult)
+                .isNotEmpty()
+                .get()
+                .extracting(ShippingEntity::getStatus)
+                .isEqualTo(ShippingStatus.DELIVERED);
+    }
 
+    @Test
+    @DisplayName("GIVEN purchase created WHEN purchase error event THEN purchase status is CANCELED")
+    public void createPurchaseProcessCanceledTest() throws Exception {
+
+        var purchase = getCreatePurchaseRequest();
+
+        var result = mvc.perform(MockMvcRequestBuilders.post("/purchases/process")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtils.asJsonString(purchase)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.purchaseRequestId").exists())
+                .andReturn();
+
+        var response = getPurchaseCreatedResponse(result);
+        var shippingEntity =
+                shippingRepository.findByPurchaseId(response.purchaseId()).orElseThrow();
+        shippingEntity.setStatus(ShippingStatus.DELIVERED);
+        assertThat(shippingEntity.getDelivery()).isNotNull();
+
+        eventBus.dispatch(new PurchaseErrorEvent(
+                new PurchaseError(response.purchaseId(), PurchaseErrorReason.ORDER_ERROR, "Simulated order error")));
+
+        await().atMost(2, TimeUnit.SECONDS)
+                .until(() -> purchaseRepository
+                                .findById(response.purchaseId())
+                                .map(PurchaseEntity::getStatus)
+                                .orElse(null)
+                        == PurchaseStatus.CANCELED);
+        await().atMost(2, TimeUnit.SECONDS).until(() -> !testEventListener.purchaseCanceledEvents.isEmpty());
+
+        var purchaseCanceled =
+                testEventListener.purchaseCanceledEvents.getFirst().getPayload();
+        assertThat(purchaseCanceled.id()).isEqualTo(response.purchaseId());
+        assertThat(purchaseCanceled.status()).isEqualTo(PurchaseStatus.CANCELED);
     }
 
     @Transactional
@@ -325,7 +389,8 @@ public class PurchaseIntegrationTest {
         assertThat(product2Result).isNotEmpty().get().extracting("quantity").isEqualTo(0);
     }
 
-    private static PurchaseCreatedResponse getPurchaseCreatedResponse(MvcResult result) throws JsonProcessingException, UnsupportedEncodingException {
+    private static PurchaseCreatedResponse getPurchaseCreatedResponse(MvcResult result)
+            throws JsonProcessingException, UnsupportedEncodingException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(result.getResponse().getContentAsString(), PurchaseCreatedResponse.class);
     }

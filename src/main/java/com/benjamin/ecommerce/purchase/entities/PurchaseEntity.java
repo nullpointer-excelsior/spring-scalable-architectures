@@ -12,6 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class PurchaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

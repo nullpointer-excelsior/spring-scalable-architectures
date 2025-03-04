@@ -3,7 +3,8 @@ package com.benjamin.ecommerce.purchase.services;
 import com.benjamin.ecommerce.products.dto.UpdateProductQuantity;
 import com.benjamin.ecommerce.purchase.dto.*;
 import com.benjamin.ecommerce.purchase.entities.PurchaseEntity;
-import com.benjamin.ecommerce.shared.integration.events.CreateShippingEvent;
+import com.benjamin.ecommerce.purchase.mappers.PurchaseMapper;
+import com.benjamin.ecommerce.shared.integration.events.*;
 import com.benjamin.ecommerce.purchase.repositories.PurchaseRepository;
 import com.benjamin.ecommerce.purchase.repositories.PurchaseRequestRepository;
 import com.benjamin.ecommerce.purchase.entities.PurchaseRequestEntity;
@@ -12,10 +13,7 @@ import com.benjamin.ecommerce.order.models.OrderProduct;
 import com.benjamin.ecommerce.payment.models.Payment;
 import com.benjamin.ecommerce.payment.models.PaymentStatus;
 import com.benjamin.ecommerce.purchase.PurchaseProcessCoordinator;
-import com.benjamin.ecommerce.shared.integration.events.CreateOrderEvent;
-import com.benjamin.ecommerce.shared.integration.events.CreatePaymentEvent;
 import com.benjamin.ecommerce.purchase.models.PurchaseStatus;
-import com.benjamin.ecommerce.shared.integration.events.UpdateProductStockEvent;
 import com.benjamin.ecommerce.shared.integration.EventBus;
 import com.benjamin.ecommerce.shared.utils.MapBuilder;
 import com.benjamin.ecommerce.shipping.models.DeliveryOption;
@@ -39,6 +37,9 @@ public class PurchaseProcessCoordinatorService implements PurchaseProcessCoordin
 
     @Autowired
     private PurchaseRepository purchaseRepository;
+
+    @Autowired
+    private PurchaseMapper purchaseMapper;
 
     @Override
     public PurchaseCreatedResponse process(CreatePurchaseRequest request) {
@@ -130,9 +131,19 @@ public class PurchaseProcessCoordinatorService implements PurchaseProcessCoordin
         updatePurchaseStatus(completePurchase.purchaseId(), PurchaseStatus.COMPLETED);
     }
 
-    private void updatePurchaseStatus(Long shipping, PurchaseStatus shipped) {
-        purchaseRepository.findById(shipping).ifPresent(purchase -> {
-            purchase.setStatus(shipped);
+    @Override
+    public void process(PurchaseError purchaseError) {
+        purchaseRepository.findById(purchaseError.purchaseId()).ifPresent(purchase -> {
+            purchase.setStatus(PurchaseStatus.CANCELED);
+            purchaseRepository.save(purchase);
+            eventBus.dispatch(new PurchaseCanceledEvent(purchaseMapper.toModel(purchase)));
+            log.warn("purchase-process-canceled: {}", purchase);
+        });
+    }
+
+    private void updatePurchaseStatus(Long purchaseId, PurchaseStatus status) {
+        purchaseRepository.findById(purchaseId).ifPresent(purchase -> {
+            purchase.setStatus(status);
             purchaseRepository.save(purchase);
         });
     }

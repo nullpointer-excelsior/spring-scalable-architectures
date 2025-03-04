@@ -1,11 +1,8 @@
 package com.benjamin.ecommerce.purchase.listeners;
 
 import com.benjamin.ecommerce.purchase.dto.CompletePurchase;
-import com.benjamin.ecommerce.shared.integration.events.OrderCreatedEvent;
-import com.benjamin.ecommerce.shared.integration.events.PaymentCreatedEvent;
+import com.benjamin.ecommerce.shared.integration.events.*;
 import com.benjamin.ecommerce.purchase.PurchaseProcessCoordinator;
-import com.benjamin.ecommerce.shared.integration.events.ShippingCreatedEvent;
-import com.benjamin.ecommerce.shared.integration.events.ShippingUpdatedEvent;
 import com.benjamin.ecommerce.shipping.models.ShippingStatus;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,5 +42,11 @@ public class PurchaseProcessEventListener {
             coordinator.process(new CompletePurchase(shipping.purchaseId()));
             log.info("purchase-process-completed: {}", shipping.purchaseId());
         }
+    }
+
+    @EventListener(PurchaseErrorEvent.class)
+    public void onPurchaseErrorEvent(PurchaseErrorEvent event) {
+        log.info("purchase-process-error: {}", event.getPayload());
+        coordinator.process(event.getPayload());
     }
 }
