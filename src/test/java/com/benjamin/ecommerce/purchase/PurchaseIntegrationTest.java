@@ -6,7 +6,6 @@ import com.benjamin.ecommerce.payment.repositories.PaymentRepository;
 import com.benjamin.ecommerce.products.entities.ProductEntity;
 import com.benjamin.ecommerce.products.repositories.ProductRepository;
 import com.benjamin.ecommerce.purchase.entities.PurchaseEntity;
-import com.benjamin.ecommerce.purchase.entities.PurchaseRequestEntity;
 import com.benjamin.ecommerce.purchase.models.PurchaseStatus;
 import com.benjamin.ecommerce.purchase.repositories.PurchaseRepository;
 import com.benjamin.ecommerce.purchase.repositories.PurchaseRequestRepository;
@@ -18,7 +17,11 @@ import com.benjamin.ecommerce.payment.models.PaymentMethod;
 import com.benjamin.ecommerce.purchase.dto.CreatePurchaseRequest;
 import com.benjamin.ecommerce.purchase.dto.PurchaseCreatedResponse;
 import com.benjamin.ecommerce.shipping.dto.CreateShippingRequest;
+import com.benjamin.ecommerce.shipping.entities.ShippingEntity;
+import com.benjamin.ecommerce.shipping.mappers.ShippingMapper;
 import com.benjamin.ecommerce.shipping.models.DeliveryOption;
+import com.benjamin.ecommerce.shipping.models.ShippingStatus;
+import com.benjamin.ecommerce.shipping.repositories.DeliveryRepository;
 import com.benjamin.ecommerce.shipping.repositories.ShippingRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -69,7 +72,13 @@ public class PurchaseIntegrationTest {
     ShippingRepository shippingRepository;
 
     @Autowired
+    DeliveryRepository deliveryRepository;
+
+    @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    ShippingMapper shippingMapper;
 
     @BeforeEach
     void tearDown() {
@@ -171,11 +180,6 @@ public class PurchaseIntegrationTest {
 
     }
 
-    private static PurchaseCreatedResponse getPurchaseCreatedResponse(MvcResult result) throws JsonProcessingException, UnsupportedEncodingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(result.getResponse().getContentAsString(), PurchaseCreatedResponse.class);
-    }
-
     @Test
     @DisplayName(
             "GIVEN purchase created WHEN POST /purchases/process THEN create Payment AND create Order AND create shipping")
@@ -214,6 +218,43 @@ public class PurchaseIntegrationTest {
         PurchaseCreatedResponse response = getPurchaseCreatedResponse(result);
         var purchaseEntity = purchaseRepository.findById(response.purchaseId());
         assertThat(purchaseEntity).get().extracting(PurchaseEntity::getStatus).isEqualTo(PurchaseStatus.SHIPPED);
+    }
+
+    @Test
+    @DisplayName("GIVEN purchase created WHEN purchase successfully THEN purchase status is SHIPPED")
+    public void createPurchaseProcessCompleteSuccessfullyTest() throws Exception {
+
+        var purchase = getCreatePurchaseRequest();
+
+        var result = mvc.perform(MockMvcRequestBuilders.post("/purchases/process")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtils.asJsonString(purchase)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.purchaseRequestId").exists())
+                .andReturn();
+
+        var response = getPurchaseCreatedResponse(result);
+        var shippingEntity = shippingRepository.findByPurchaseId(response.purchaseId()).orElseThrow();
+        shippingEntity.setStatus(ShippingStatus.DELIVERED);
+        assertThat(shippingEntity.getDelivery()).isNotNull();
+
+        var updateShipping = shippingMapper.toModel(shippingEntity);
+
+        mvc.perform(MockMvcRequestBuilders.put("/shipping")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtils.asJsonString(updateShipping)))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        var purchaseResult = purchaseRepository.findById(response.purchaseId());
+        var shippingResult = shippingRepository.findByPurchaseId(response.purchaseId());
+        assertThat(purchaseResult).isNotEmpty().get().extracting(PurchaseEntity::getStatus).isEqualTo(PurchaseStatus.COMPLETED);
+        assertThat(shippingResult).isNotEmpty().get().extracting(ShippingEntity::getDeliveredAt).isNotNull();
+        assertThat(shippingResult).isNotEmpty().get().extracting(ShippingEntity::getStatus).isEqualTo(ShippingStatus.DELIVERED);
+
     }
 
     @Transactional
@@ -282,6 +323,11 @@ public class PurchaseIntegrationTest {
 
         var product2Result = productRepository.findById(product2.getSku());
         assertThat(product2Result).isNotEmpty().get().extracting("quantity").isEqualTo(0);
+    }
+
+    private static PurchaseCreatedResponse getPurchaseCreatedResponse(MvcResult result) throws JsonProcessingException, UnsupportedEncodingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(result.getResponse().getContentAsString(), PurchaseCreatedResponse.class);
     }
 
     private static CreatePurchaseRequest getCreatePurchaseRequest() {

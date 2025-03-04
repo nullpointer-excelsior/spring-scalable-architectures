@@ -26,7 +26,7 @@ public class ShippingEntity {
     @Enumerated(EnumType.STRING)
     private ShippingStatus status;
 
-    @OneToOne(mappedBy = "shipping", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "shipping", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private DeliveryEntity delivery;
 
     @Column

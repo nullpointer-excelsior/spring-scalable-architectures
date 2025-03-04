@@ -1,5 +1,6 @@
 package com.benjamin.ecommerce.products;
 
+import com.benjamin.ecommerce.products.dto.UpdateProductQuantity;
 import com.benjamin.ecommerce.products.models.Product;
 
 import java.util.List;

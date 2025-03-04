@@ -1,6 +1,6 @@
 package com.benjamin.ecommerce.products.services;
 
-import com.benjamin.ecommerce.products.UpdateProductQuantity;
+import com.benjamin.ecommerce.products.dto.UpdateProductQuantity;
 import com.benjamin.ecommerce.products.mappers.ProductMapper;
 import com.benjamin.ecommerce.products.repositories.ProductRepository;
 import com.benjamin.ecommerce.products.ProductUseCases;

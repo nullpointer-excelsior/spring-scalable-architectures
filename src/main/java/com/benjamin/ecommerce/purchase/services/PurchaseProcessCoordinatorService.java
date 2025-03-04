@@ -1,6 +1,6 @@
 package com.benjamin.ecommerce.purchase.services;
 
-import com.benjamin.ecommerce.products.UpdateProductQuantity;
+import com.benjamin.ecommerce.products.dto.UpdateProductQuantity;
 import com.benjamin.ecommerce.purchase.dto.*;
 import com.benjamin.ecommerce.purchase.entities.PurchaseEntity;
 import com.benjamin.ecommerce.shared.integration.events.CreateShippingEvent;
@@ -16,7 +16,6 @@ import com.benjamin.ecommerce.shared.integration.events.CreateOrderEvent;
 import com.benjamin.ecommerce.shared.integration.events.CreatePaymentEvent;
 import com.benjamin.ecommerce.purchase.models.PurchaseStatus;
 import com.benjamin.ecommerce.shared.integration.events.UpdateProductStockEvent;
-import com.benjamin.ecommerce.shipping.models.Delivery;
 import com.benjamin.ecommerce.shared.integration.EventBus;
 import com.benjamin.ecommerce.shared.utils.MapBuilder;
 import com.benjamin.ecommerce.shipping.models.DeliveryOption;
@@ -43,7 +42,7 @@ public class PurchaseProcessCoordinatorService implements PurchaseProcessCoordin
 
     @Override
     public PurchaseCreatedResponse process(CreatePurchaseRequest request) {
-        log.info("Purchase:{}", request);
+        log.info("purchase-process-started: {}", request);
         var o = new MapBuilder<>()
                 .record("products", request.order().products())
                 .record("amount", request.order().amount())
@@ -118,19 +117,26 @@ public class PurchaseProcessCoordinatorService implements PurchaseProcessCoordin
 
     @Override
     public void process(Order order) {
-        purchaseRepository.findById(order.purchaseId()).ifPresent(purchase -> {
-            purchase.setStatus(PurchaseStatus.ORDERED);
-            purchaseRepository.save(purchase);
-        });
-
+        updatePurchaseStatus(order.purchaseId(), PurchaseStatus.ORDERED);
     }
 
     @Override
     public void process(Shipping shipping) {
-        purchaseRepository.findById(shipping.purchaseId()).ifPresent(purchase -> {
-            purchase.setStatus(PurchaseStatus.SHIPPED);
+        updatePurchaseStatus(shipping.purchaseId(), PurchaseStatus.SHIPPED);
+    }
+
+    @Override
+    public void process(CompletePurchase completePurchase) {
+        updatePurchaseStatus(completePurchase.purchaseId(), PurchaseStatus.COMPLETED);
+    }
+
+    private void updatePurchaseStatus(Long shipping, PurchaseStatus shipped) {
+        purchaseRepository.findById(shipping).ifPresent(purchase -> {
+            purchase.setStatus(shipped);
             purchaseRepository.save(purchase);
         });
     }
+
+
 
 }

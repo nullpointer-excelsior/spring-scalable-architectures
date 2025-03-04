@@ -79,6 +79,7 @@ public class ShippingIntegrationTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.purchaseId").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.delivery").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.shippedAt").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(ShippingStatus.DELIVERED.toString()));
     }
 

@@ -16,7 +16,7 @@ public class ApplicationEventBus implements EventBus {
 
     @Override
     public <T extends Event<?>> void dispatch(T event) {
-        log.info("dispatching-event: {}", event);
+        log.info("dispatching-event[{}]: {}", event.getClass().getSimpleName(), event.getPayload());
         this.publisher.publishEvent(event);
     }
 }

@@ -14,4 +14,5 @@ public interface DeliveryMapper {
     DeliveryEntity toUnPersistedEntity(CreateShipping request);
     @Mapping(target = "shipping", ignore = true)
     DeliveryEntity toEntity(Delivery delivery);
+    Delivery toModel(DeliveryEntity entity);
 }
