@@ -1,0 +1,24 @@
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { CartState } from '@core/store/state/cart.state';
+import { CheckoutState } from '@core/store/state/checkout.state';
+import { UIState } from '@core/store/state/ui.state';
+import { UserState } from '@core/store/state/user.state';
+import { withNgxsReduxDevtoolsPlugin } from '@ngxs/devtools-plugin';
+import { provideStore } from '@ngxs/store';
+import { routes } from './app.routes';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes),
+    provideStore([
+      CartState,
+      UserState,
+      CheckoutState,
+      UIState
+    ],
+      withNgxsReduxDevtoolsPlugin()
+    )
+  ]
+};

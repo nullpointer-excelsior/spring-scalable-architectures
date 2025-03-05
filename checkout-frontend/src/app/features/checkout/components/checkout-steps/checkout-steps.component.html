@@ -1,0 +1,8 @@
+<div class="flex items-center justify-center space-x-8 py-8">
+    <app-step-indicator name="SHIPPING" link="/shipping" [step]="1" [currentStep]="currentStep()" ></app-step-indicator>
+    <app-step-indicator name="BILLING" link="/billing" [step]="2" [currentStep]="currentStep()" ></app-step-indicator>
+    <app-step-indicator name="REVIEW & CONFIRMATION" link="/confirmation" [step]="3" [currentStep]="currentStep()" ></app-step-indicator>
+</div>
+<div class="container mx-auto">
+    <ng-content></ng-content>
+</div>
