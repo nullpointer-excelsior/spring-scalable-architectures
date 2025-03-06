@@ -7,5 +7,7 @@ import jakarta.validation.constraints.Positive;
 public record Product(
     @NotEmpty String sku,
     @NotEmpty String name,
+    @NotEmpty String brand,
+    String image,
     @Positive Double price,
     @NotNull Integer quantity) {}

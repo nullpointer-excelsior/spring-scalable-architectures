@@ -20,6 +20,12 @@ public class ProductEntity {
     private String name;
 
     @Column(nullable = false)
+    private String brand;
+
+    @Column
+    private String image;
+
+    @Column(nullable = false)
     private Double price;
 
     @Column(nullable = false)

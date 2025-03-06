@@ -330,12 +330,14 @@ public class PurchaseIntegrationTest {
                 .sku("1")
                 .quantity(10)
                 .price(1000.0)
+                .brand("b1")
                 .name("p1")
                 .build();
         var product2 = ProductEntity.builder()
                 .sku("2")
                 .quantity(1)
                 .price(1000.0)
+                .brand("b1")
                 .name("p2")
                 .build();
         productRepository.save(product1);

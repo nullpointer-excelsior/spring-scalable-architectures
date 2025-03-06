@@ -11,6 +11,8 @@ public class ProductResponseMother {
     public static class ProductModelBuilder {
         private String sku = "1111";
         private String name = "guitar";
+        private String brand = "bc rich";
+        private String image = "/img/p1.webp";
         private Double price = 1000.0;
         private Integer quantity = 1;
 
@@ -35,7 +37,7 @@ public class ProductResponseMother {
         }
 
         public Product build() {
-      return new Product(sku, name, price, quantity);
+      return new Product(sku, name, brand, image, price, quantity);
         }
     }
 }
