@@ -1,3 +1,4 @@
+import { inject, Injectable } from "@angular/core";
 import { PaymentMethod } from "@core/models/billing.model";
 import { CartModel } from "@core/models/cart.model";
 import { CheckoutModel } from "@core/models/checkout.model";
@@ -6,10 +7,11 @@ import { UpdateCartProductsAction } from "@core/store/actions/cart.actions";
 import { CreateRandomCheckoutAction, SetBillingAction, SetContactInfoAction, SetShippingAction } from "@core/store/actions/checkout.actions";
 import { SetUserAction } from "@core/store/actions/user.actions";
 import { CartState } from "@core/store/state/cart.state";
-import { getCartProducts } from "@core/utils/get-cart-items";
 import { getRandomElements } from "@core/utils/get-random-elements";
 import { getUsers } from "@core/utils/get-users";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
+import { ProductService } from "@core/services/product.service";
+import { map, tap } from "rxjs";
 
 @State<CheckoutModel>({
     name: 'checkout',
@@ -37,7 +39,10 @@ import { Action, Selector, State, StateContext } from "@ngxs/store";
         }
     }
 })
+@Injectable()
 export class CheckoutState {
+
+    private productService = inject(ProductService);
 
     @Action(SetBillingAction)
     setBilling(ctx: StateContext<CheckoutModel>, action: SetBillingAction) {
@@ -71,7 +76,6 @@ export class CheckoutState {
     createRandomChekout(ctx: StateContext<CheckoutModel>) {
         const state = ctx.getState();
         const user = getRandomElements(getUsers(), 1)[0];
-        const products = getRandomElements(getCartProducts(), 3);
         ctx.patchState({
             billing: {
                 ...state.billing,
@@ -84,13 +88,18 @@ export class CheckoutState {
                 delivery: Delivery.Standard,
                 fullname: user.fullname,
                 address: user.address.street,
-                city: user.address.city                
+                city: user.address.city
             }
         })
-        ctx.dispatch([
-            new SetUserAction(user),
-            new UpdateCartProductsAction(products)
-        ])
+        return this.productService.getProducts().pipe(
+            map(products => getRandomElements(products, 7)),
+            tap(products => {
+                ctx.dispatch([
+                    new SetUserAction(user),
+                    new UpdateCartProductsAction(products)
+                ])
+            })
+        )
     }
 
     @Selector()
@@ -106,7 +115,7 @@ export class CheckoutState {
     @Selector()
     static getBillingForm(state: CheckoutModel) {
         const { billing } = state
-        const { fullname, dni} = billing.contactInfo
+        const { fullname, dni } = billing.contactInfo
         const { cardName, cardNumber, expiration, cvv } = billing.payment.details
         return {
             dni,
@@ -121,7 +130,7 @@ export class CheckoutState {
     @Selector([CheckoutState, CartState])
     static getCheckoutSummary(checkout: CheckoutModel, cart: CartModel) {
         return {
-            shippingOption: checkout.shipping.delivery === Delivery.Standard? 'Regular (3 -7 days)' : 'Express (1 -3 days)',
+            shippingOption: checkout.shipping.delivery === Delivery.Standard ? 'Regular (3 -7 days)' : 'Express (1 -3 days)',
             paymentMethod: checkout.billing.payment.method,
             productsQuantity: cart.productsQuantity,
             amount: cart.amount

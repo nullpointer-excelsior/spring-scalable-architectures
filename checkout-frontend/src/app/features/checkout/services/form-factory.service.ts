@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { CheckoutState } from "@core/store/state/checkout.state";
 import { Store } from "@ngxs/store";
+import { map } from "rxjs";
 
 @Injectable({
     providedIn: 'root'
@@ -24,12 +25,13 @@ export class FormFactoryService {
     }
 
     createShippingForm() {
-        const shipping = this.store.selectSnapshot(CheckoutState.getShipping)
-        return this.formBuilder.group({
-            delivery: [shipping.delivery, Validators.required],
-            fullname: [shipping.fullname, Validators.required],
-            address: [shipping.address, Validators.required],
-            city: [shipping.city, Validators.required],
-        })
+        return this.store.select(CheckoutState.getShipping).pipe(
+            map(shipping => this.formBuilder.group({
+                delivery: [shipping.delivery, Validators.required],
+                fullname: [shipping.fullname, Validators.required],
+                address: [shipping.address, Validators.required],
+                city: [shipping.city, Validators.required],
+            }))
+        )
     }
 }

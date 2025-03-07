@@ -1,4 +1,5 @@
-<div [formGroup]="form" class="container-step flex flex-col">
+@if (form != null) {
+<form [formGroup]="form" class="container-step flex flex-col">
   <div class="flex flex-row items-center">
     <div class="basis-1/2 card-step">
       <app-input-text class="mx-2 h-20" title="Fullname" formControlName="fullname"></app-input-text>
@@ -16,7 +17,8 @@
             </div>
             <input id="DeliveryStandard" type="radio" [value]="deliveryOptions.Standard" formControlName="delivery"
               class=" hidden peer" checked />
-            <div class="w-5 h-5 rounded-full border-2 border-orange-500 flex items-center justify-center peer-checked:bg-orange-500">
+            <div
+              class="w-5 h-5 rounded-full border-2 border-orange-500 flex items-center justify-center peer-checked:bg-orange-500">
               <div class="w-2.5 h-2.5 bg-white rounded-full"></div>
             </div>
           </label>
@@ -30,7 +32,8 @@
             </div>
             <input id="DeliveryPriority" type="radio" [value]="deliveryOptions.Express" formControlName="delivery"
               class="hidden peer" />
-            <div class="w-5 h-5 rounded-full border-2 border-orange-500 flex items-center justify-center peer-checked:bg-orange-500">
+            <div
+              class="w-5 h-5 rounded-full border-2 border-orange-500 flex items-center justify-center peer-checked:bg-orange-500">
               <div class="w-2.5 h-2.5 bg-white rounded-full"></div>
             </div>
           </label>
@@ -43,4 +46,5 @@
       Continue
     </button>
   </div>
-</div>
+</form>
+}

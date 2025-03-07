@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Delivery } from '@core/models/shipping.model';
@@ -8,7 +8,10 @@ import { FormFactoryService } from '@features/checkout/services/form-factory.ser
 import { Store } from '@ngxs/store';
 import { InputTextComponent } from '@shared/components/input-text/input-text.component';
 import { CheckoutButtonDirective } from '@shared/directives/checkout-button.directive';
+import { switchMap } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-shipping',
   imports: [
@@ -19,18 +22,21 @@ import { CheckoutButtonDirective } from '@shared/directives/checkout-button.dire
   ],
   templateUrl: './shipping.component.html'
 })
-export class ShippingComponent {
+export class ShippingComponent implements OnInit {
 
   private store = inject(Store);
-  private formFactory = inject(FormFactoryService)
+  private formFactory = inject(FormFactoryService);
   public form: FormGroup;
-  public deliveryOptions = Delivery
+  public deliveryOptions = Delivery;
 
-  constructor() {
+  ngOnInit(): void {
     this.store.dispatch([
       new CreateRandomCheckoutAction(),
       new SetCurrentStep(1)
-    ]).subscribe(() => this.form = this.formFactory.createShippingForm())
+    ]).pipe(
+      switchMap(() => this.formFactory.createShippingForm()),
+      untilDestroyed(this)
+    ).subscribe(form => this.form = form)
   }
 
   onContinue() {

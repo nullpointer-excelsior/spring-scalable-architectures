@@ -11,6 +11,7 @@ import { DeleteCartProductAction, UpdateCartProductAction } from '@core/store/ac
 })
 export class CartListComponent {
 
+
   store = inject(Store)
   products = input<ProductModel[]>();
 
@@ -24,6 +25,10 @@ export class CartListComponent {
       product.quantity = newQuantity
       this.store.dispatch(new UpdateCartProductAction(product))
     }
+  }
+
+  onImageError(event: ErrorEvent) {
+    (event.target as HTMLImageElement).src = '/img/product-default-img.webp';
   }
 
 }
