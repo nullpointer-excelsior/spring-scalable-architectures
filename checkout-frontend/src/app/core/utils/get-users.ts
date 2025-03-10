@@ -1,6 +1,7 @@
 export function getUsers() {
     return [
         {
+            id: 1,
             fullname: "SpongeBob SquarePants",
             email: "spongebob.squarepants@example.com",
             address: {
@@ -9,6 +10,7 @@ export function getUsers() {
             }
         },
         {
+            id: 2,
             fullname: "Patrick Star",
             email: "patrick.star@example.com",
             address: {
@@ -17,6 +19,7 @@ export function getUsers() {
             }
         },
         {
+            id: 3,
             fullname: "Squidward Tentacles",
             email: "squidward.tentacles@example.com",
             address: {
@@ -25,6 +28,7 @@ export function getUsers() {
             }
         },
         {
+            id: 4,
             fullname: "Mr. Krabs",
             email: "eugene.krabs@example.com",
             address: {
@@ -33,6 +37,7 @@ export function getUsers() {
             }
         },
         {
+            id: 5,
             fullname: "Sandy Cheeks",
             email: "sandy.cheeks@example.com",
             address: {
@@ -41,6 +46,7 @@ export function getUsers() {
             }
         },
         {
+            id: 6,
             fullname: "Plankton",
             email: "plankton@example.com",
             address: {
@@ -49,6 +55,7 @@ export function getUsers() {
             }
         },
         {
+            id: 7,
             fullname: "Mrs. Puff",
             email: "mrs.puff@example.com",
             address: {
@@ -57,6 +64,7 @@ export function getUsers() {
             }
         },
         {
+            id: 8,
             fullname: "Pearl Krabs",
             email: "pearl.krabs@example.com",
             address: {
@@ -65,6 +73,7 @@ export function getUsers() {
             }
         },
         {
+            id: 9,
             fullname: "Larry the Lobster",
             email: "larry.lobster@example.com",
             address: {
@@ -73,6 +82,7 @@ export function getUsers() {
             }
         },
         {
+            id: 10,
             fullname: "Mermaid Man",
             email: "mermaid.man@example.com",
             address: {

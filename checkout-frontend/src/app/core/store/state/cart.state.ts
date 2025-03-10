@@ -1,13 +1,15 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { CartModel } from '@core/models/cart.model';
 import { ProductModel } from '@core/models/product.model';
 import { CartService } from '@core/services/cart.service';
-import { DeleteCartProductAction, SetCartAction, UpdateCartProductAction, UpdateCartProductsAction } from '@core/store/actions/cart.actions';
+import { CreateCartAction, DeleteCartProductAction, UpdateCartProductAction } from '@core/store/actions/cart.actions';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { tap } from 'rxjs';
 
 @State<CartModel>({
   name: 'cart',
   defaults: {
+    id: null,
     products: [],
     amount: 0,
     productsQuantity: 0
@@ -18,45 +20,34 @@ import { Action, Selector, State, StateContext } from '@ngxs/store';
 })
 export class CartState {
 
-  constructor(private cart: CartService) {}
+  private cart = inject(CartService)
 
-  @Action(SetCartAction)
-  setCart(ctx: StateContext<CartModel>, action: SetCartAction) {
-    ctx.setState(action.cart);
-  }
-
-  @Action(UpdateCartProductsAction)
-  updateCheckoutProducts(ctx: StateContext<CartModel>, { products }: UpdateCartProductsAction) {
-    const state = ctx.getState();
-    ctx.setState({
-      ...state,
-      products: products,
-      amount: this.cart.calculateTotal(products),
-      productsQuantity: this.cart.calculateProductsQuantity(products)
-    });
+  @Action(CreateCartAction)
+  createCart(ctx: StateContext<CartModel>, action: CreateCartAction) {
+    return this.cart.createCart({ ...action.cart }).pipe(
+      tap(cart => ctx.setState(cart))
+    )
   }
 
   @Action(UpdateCartProductAction)
   updateCartProductAction(ctx: StateContext<CartModel>, { product }: UpdateCartProductAction) {
     const state = ctx.getState();
-    const products = this.cart.updateProduct(product, state.products)
-    ctx.dispatch(new UpdateCartProductsAction(products))
+    return this.cart.updateProductCart(state.id, product).pipe(
+      tap(cart => ctx.setState(cart))
+    )
   }
 
   @Action(DeleteCartProductAction)
-  deleteCartProductAction(ctx: StateContext<CartModel>, { sku }: DeleteCartProductAction) {
+  deleteCartProductAction(ctx: StateContext<CartModel>, action: DeleteCartProductAction) {
     const state = ctx.getState();
-    const products = this.cart.deleteProduct(sku, state.products)
-    ctx.patchState({
-      products,
-      amount: this.cart.calculateTotal(products),
-      productsQuantity: this.cart.calculateProductsQuantity(products)
-    })
+    return this.cart.deleteProductCart(state.id, action.product).pipe(
+      tap(cart => ctx.setState(cart))
+    );
   }
 
   @Selector()
   static getProducts(state: CartModel): ProductModel[] {
-    return state.products.sort((a, b) => +a.sku - +b.sku);
+    return state.products;
   }
 
   @Selector()

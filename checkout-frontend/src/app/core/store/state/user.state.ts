@@ -6,6 +6,7 @@ import { SetUserAction } from '@core/store/actions/user.actions';
 @State<UserModel>({
     name: 'user',
     defaults: {
+        id: -1,
         fullname: 'Guest',
         email: 'guest@guest.com',
         address: {

@@ -3,7 +3,7 @@ import { PaymentMethod } from "@core/models/billing.model";
 import { CartModel } from "@core/models/cart.model";
 import { CheckoutModel } from "@core/models/checkout.model";
 import { Delivery } from "@core/models/shipping.model";
-import { UpdateCartProductsAction } from "@core/store/actions/cart.actions";
+import { CreateCartAction } from "@core/store/actions/cart.actions";
 import { CreateRandomCheckoutAction, SetBillingAction, SetContactInfoAction, SetShippingAction } from "@core/store/actions/checkout.actions";
 import { SetUserAction } from "@core/store/actions/user.actions";
 import { CartState } from "@core/store/state/cart.state";
@@ -11,28 +11,30 @@ import { getRandomElements } from "@core/utils/get-random-elements";
 import { getUsers } from "@core/utils/get-users";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { ProductService } from "@core/services/product.service";
-import { map, tap } from "rxjs";
+import { map, switchMap, tap } from "rxjs";
+import { EcommerceApi } from "../../services/ecommerce.api";
+import { CartService } from "../../services/cart.service";
 
 @State<CheckoutModel>({
     name: 'checkout',
     defaults: {
         billing: {
             contactInfo: {
-                dni: '',
-                fullname: '',
+                dni: '12345678-5',
+                fullname: 'juan perez',
             },
             payment: {
                 method: PaymentMethod.CreditCard,
                 details: {
-                    cardName: '',
-                    cardNumber: '',
-                    expiration: '',
-                    cvv: 0
+                    cardName: 'j card',
+                    cardNumber: '1234',
+                    expiration: '2/27',
+                    cvv: 100
                 }
             }
         },
         shipping: {
-            delivery: Delivery.Standard,
+            delivery: Delivery.FREE,
             fullname: '',
             address: '',
             city: ''
@@ -43,13 +45,28 @@ import { map, tap } from "rxjs";
 export class CheckoutState {
 
     private productService = inject(ProductService);
+    private ecommerce = inject(EcommerceApi);
+    private cart = inject(CartService);
 
     @Action(SetBillingAction)
     setBilling(ctx: StateContext<CheckoutModel>, action: SetBillingAction) {
-        ctx.setState({
-            ...ctx.getState(),
-            billing: action.billing
-        });
+        return this.ecommerce.validatePaymentMethod({
+            method: action.billing.payment.method,
+            details: {
+                ...action.billing.payment.details
+            }
+        }).pipe(
+            tap(res => {
+                if (res.valid) {
+                    ctx.patchState({
+                        billing: action.billing
+                    });
+                } else {
+                    alert("Invalid payment")
+                }
+            })
+        )
+       
     }
 
     @Action(SetContactInfoAction)
@@ -85,7 +102,7 @@ export class CheckoutState {
                 }
             },
             shipping: {
-                delivery: Delivery.Standard,
+                delivery: Delivery.FREE,
                 fullname: user.fullname,
                 address: user.address.street,
                 city: user.address.city
@@ -93,10 +110,13 @@ export class CheckoutState {
         })
         return this.productService.getProducts().pipe(
             map(products => getRandomElements(products, 7)),
-            tap(products => {
+            tap(cart => {
                 ctx.dispatch([
                     new SetUserAction(user),
-                    new UpdateCartProductsAction(products)
+                    new CreateCartAction({ 
+                        products: cart,
+                        user,
+                    })
                 ])
             })
         )
@@ -130,10 +150,15 @@ export class CheckoutState {
     @Selector([CheckoutState, CartState])
     static getCheckoutSummary(checkout: CheckoutModel, cart: CartModel) {
         return {
-            shippingOption: checkout.shipping.delivery === Delivery.Standard ? 'Regular (3 -7 days)' : 'Express (1 -3 days)',
+            shippingOption: checkout.shipping.delivery === Delivery.FREE ? 'Regular (3 -7 days)' : 'Express (1 -3 days)',
             paymentMethod: checkout.billing.payment.method,
             productsQuantity: cart.productsQuantity,
             amount: cart.amount
         }
+    }
+
+    @Selector()
+    static getPayment(state: CheckoutModel){
+        return state.billing.payment
     }
 }

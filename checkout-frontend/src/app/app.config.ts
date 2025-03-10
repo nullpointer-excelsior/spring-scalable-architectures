@@ -8,12 +8,16 @@ import { withNgxsReduxDevtoolsPlugin } from '@ngxs/devtools-plugin';
 import { provideStore } from '@ngxs/store';
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
+import { provideToastr } from 'ngx-toastr';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(),
+    provideToastr(),
+    provideAnimations(),
     provideStore([
       CartState,
       UserState,

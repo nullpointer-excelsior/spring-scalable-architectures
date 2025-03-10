@@ -1,6 +1,6 @@
 export enum Delivery {
-    Standard = 'Standard',
-    Express = 'Express',
+    FREE = 'FREE',
+    EXPRESS = 'EXPRESS',
 }
 
 export interface ShippingModel {

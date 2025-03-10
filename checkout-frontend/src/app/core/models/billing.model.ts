@@ -12,8 +12,9 @@ export interface CreditCardModel {
 }
 
 export enum PaymentMethod {
-    CreditCard = 'CreditCard',
-    GiftCard = 'GiftCard'
+    CreditCard = 'CREDIT_CARD',
+    GiftCard = 'GIFT_CARD',
+    DebitCard = 'DEBIT_CARD'
 }
 
 export interface PaymentModel {

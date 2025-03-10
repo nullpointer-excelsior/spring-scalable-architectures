@@ -16,7 +16,7 @@ export class CartListComponent {
   products = input<ProductModel[]>();
 
   deleteCartProduct(product: ProductModel) {
-    this.store.dispatch(new DeleteCartProductAction(product.sku))
+    this.store.dispatch(new DeleteCartProductAction(product))
   }
 
   onProductQuantityChange(event: Event, product: ProductModel) {

@@ -1,17 +1,15 @@
-import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { ProductModel } from '@core/models/product.model';
-import { environment } from './../../../environments/environment';
+import { EcommerceApi } from './ecommerce.api';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
 
-  private http = inject(HttpClient)
+  private ecommerce = inject(EcommerceApi)
 
   getProducts() {
-    return this.http.get<ProductModel[]>(`${environment.checkoutUrl}/products`);
+    return this.ecommerce.getProducts();
   }
 
 }

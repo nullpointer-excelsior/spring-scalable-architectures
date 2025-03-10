@@ -14,7 +14,7 @@
             <p class="text-base text-green-500">$ {{ summary().amount }}</p>
         </div>
         <div class="flex justify-center my-8">
-            <button appCheckoutButton>
+            <button appCheckoutButton (click)="onConfirm()">
                 Pay
             </button>
         </div>

@@ -4,6 +4,7 @@ export interface AddressModel {
 }
 
 export interface UserModel { 
+    id: number;
     fullname: string;
     email: string;
     address: AddressModel;

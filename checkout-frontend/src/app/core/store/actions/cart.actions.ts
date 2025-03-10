@@ -1,24 +1,19 @@
-import { CartModel } from "@core/models/cart.model";
 import { ProductModel } from "@core/models/product.model";
 
-export class UpdateCartProductsAction {
-    static readonly type = '[Cart] Update Checkout Products';
-    constructor(public products: ProductModel[]) {}
-}
 
 export class UpdateCartProductAction {
     static readonly type = '[Cart] Update Cart Product';
-    constructor(public product: ProductModel) {}
+    constructor(public product: ProductModel) { }
 }
 
-export class SetCartAction {
-    static readonly type = '[Cart] Set Cart';
-    constructor(public cart: CartModel) { }
+export class CreateCartAction {
+    static readonly type = '[Cart] Create Cart';
+    constructor(public cart: { user: { id: number; email: string }, products: ProductModel[] }) { }
 }
 
-export class DeleteCartProductAction{
+export class DeleteCartProductAction {
     static readonly type = '[Cart] Delete Cart Product';
-    constructor(public sku: number) {}
+    constructor(public product: ProductModel) { }
 }
 
 

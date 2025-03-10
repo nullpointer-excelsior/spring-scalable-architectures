@@ -2,10 +2,18 @@ import { Injectable } from "@angular/core";
 import { Action, Selector, State } from "@ngxs/store";
 import { SetCurrentStep } from "@core/store/actions/ui.actions";
 
+type Notification = {
+    type: 'info' | 'error'
+    title: string;
+    message: string;
+    createdAt: Date;
+}
+
 export interface UI {
     checkoutSteps: {
         currentStep: number;
-    }
+    },
+    notifications: Notification[]
 }
 
 @State<UI>({
@@ -13,7 +21,8 @@ export interface UI {
     defaults: {
         checkoutSteps: {
             currentStep: 1
-        }
+        },
+        notifications: []    
     }
 })
 @Injectable({
