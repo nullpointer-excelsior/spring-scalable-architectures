@@ -16,7 +16,6 @@ public interface CartProductMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "cart", ignore = true)
     List<CartProductEntity> toUnPersistedEntities(List<CartProduct> products);
-
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "cart", ignore = true)
     CartProductEntity toUnPersistedEntity(CartProduct product);

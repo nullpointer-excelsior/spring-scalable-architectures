@@ -4,6 +4,7 @@ import com.benjamin.ecommerce.CheckoutApplication;
 import com.benjamin.ecommerce.cart.entities.CartEntity;
 import com.benjamin.ecommerce.cart.entities.CartProductEntity;
 import com.benjamin.ecommerce.cart.entities.CartUserEntity;
+import com.benjamin.ecommerce.cart.repositories.CartProductRepository;
 import com.benjamin.ecommerce.cart.repositories.CartRepository;
 import com.benjamin.ecommerce.cart.repositories.CartUserRepository;
 import com.benjamin.ecommerce.shared.TestUtils;
@@ -50,6 +51,9 @@ public class CartIntegrationTest {
     @Autowired
     CartRepository cartRepository;
 
+    @Autowired
+    CartProductRepository cartProductRepository;
+
     @AfterEach
     void tearDown() {
         this.cartRepository.deleteAll();
@@ -61,7 +65,7 @@ public class CartIntegrationTest {
 
         var createCartRequest = CreateCartRequestMother.builder()
                 .withUser(new CartUser(1L, "john@company.com"))
-                .withProducts(new CartProduct("1", "guitar", 1000.0, 1))
+                .withProducts(new CartProduct("1", "guitar", "bc rich", "warlock.jpg",1000.0, 1))
                 .build();
 
         mvc.perform(MockMvcRequestBuilders.post("/carts")
@@ -86,7 +90,7 @@ public class CartIntegrationTest {
 
         var createCartRequest = CreateCartRequestMother.builder()
                 .withUser(new CartUser(1L, "john@company.com"))
-                .withProducts(new CartProduct("1", "guitar", 1000.0, 1))
+                .withProducts(new CartProduct("1", "guitar", "bc rich", "warlock.jpg",1000.0, 1))
                 .build();
 
         assertThat(this.cartUserRepository.count()).isEqualTo(0);
@@ -111,7 +115,7 @@ public class CartIntegrationTest {
 
         var createCartRequest = CreateCartRequestMother.builder()
                 .withUser(new CartUser(persistedUser.getId(), persistedUser.getEmail()))
-                .withProducts(new CartProduct("1", "guitar", 1000.0, 1))
+                .withProducts(new CartProduct("1", "guitar", "bc rich", "warlock.jpg",1000.0, 1))
                 .build();
 
         assertThat(this.cartUserRepository.count()).isEqualTo(1);
@@ -137,17 +141,23 @@ public class CartIntegrationTest {
                         .sku("1")
                         .name("p1")
                         .price(1000.0)
+                        .brand("b")
+                        .image("image.jpg")
                         .quantity(1)
                         .build(),
                 CartProduct.builder()
                         .sku("2")
                         .name("p2")
+                        .brand("b")
+                        .image("image.jpg")
                         .price(1000.0)
                         .quantity(1)
                         .build(),
                 CartProduct.builder()
                         .sku("3")
                         .name("p3")
+                        .brand("b")
+                        .image("image.jpg")
                         .price(1000.0)
                         .quantity(1)
                         .build()));
@@ -166,15 +176,66 @@ public class CartIntegrationTest {
     }
 
     @Test
+    @Transactional
+    @DisplayName(
+            "GIVEN cart created WHEN PATCH /carts/{id}/products/{sku} with valid ProductModel THEN response CartProduct OK")
+    public void updateCartProductValidTest() throws Exception {
+        var savedCart = createCart();
+        var productToUpdate = savedCart.getProducts().getFirst();
+
+        assertThat(productToUpdate.getName()).isNotEqualTo("name-updated");
+        assertThat(productToUpdate.getBrand()).isNotEqualTo("brand-updated");
+
+        var request = CartProduct.builder()
+                .sku(productToUpdate.getSku())
+                .name("name-updated")
+                .brand("brand-updated")
+                .image("image.jpg")
+                .price(1000.0)
+                .quantity(1)
+                .build();
+
+        mvc.perform(MockMvcRequestBuilders.patch("/carts/{id}/products/{sku}", savedCart.getId(), request.sku())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtils.asJsonString(request)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.sku").value(request.sku()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(request.name()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.brand").value(request.brand()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.price").value(request.price()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.quantity").value(request.quantity()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.image").value(request.image()));
+    }
+
+    @Test
+    @Transactional
+    @DisplayName(
+            "GIVEN cart created WHEN DELETE /carts/{id}/products/{sku} THEN response OK")
+    public void deleteCartProductValidTest() throws Exception {
+        var savedCart = createCart();
+        var productToDelete = savedCart.getProducts().getFirst();
+
+        assertThat(savedCart.getProducts().size()).isEqualTo(2L);
+
+        mvc.perform(MockMvcRequestBuilders.delete("/carts/{id}/products/{sku}", savedCart.getId(), productToDelete.getSku()))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+
+    }
+
+    @Test
     @DisplayName("GIVEN no cart created WHEN PUT /carts/999/products with cart not found THEN response NotFound")
     void updateProductWithCartNotFoundTest() throws Exception {
         var request = new UpdateProductsRequest(List.of(CartProduct.builder()
                 .sku("1")
                 .name("p1")
+                .brand("b")
+                .image("image.jpg")
                 .price(1000.0)
                 .quantity(1)
                 .build()));
-
         mvc.perform(MockMvcRequestBuilders.put("/carts/999/products")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -215,13 +276,16 @@ public class CartIntegrationTest {
     static Stream<CreateCartRequest> invalidCartRequests() {
         return Stream.of(
                 CreateCartRequestMother.builder()
-                        .withProducts(new CartProduct("1111", "guitar", -100.0, 1))
+                        .withProducts(new CartProduct("1111", "guitar", "jackson", null,-100.0, 1))
                         .build(),
                 CreateCartRequestMother.builder()
-                        .withProducts(new CartProduct("", "guitar", 100.0, 1))
+                        .withProducts(new CartProduct("", "guitar", "jackson", "image.jpg", 100.0, 1))
                         .build(),
                 CreateCartRequestMother.builder()
-                        .withProducts(new CartProduct("1111", "", 100.0, 1))
+                        .withProducts(new CartProduct("1111", "","jackson", "image.jpg", 100.0, 1))
+                        .build(),
+                CreateCartRequestMother.builder()
+                        .withProducts(new CartProduct("1111", "","", "image.jpg", 100.0, 1))
                         .build(),
                 CreateCartRequestMother.builder()
                         .withProducts(Collections.emptyList())
@@ -251,10 +315,11 @@ public class CartIntegrationTest {
 
     static Stream<UpdateProductsRequest> invalidProductRequests() {
         return Stream.of(
-                new UpdateProductsRequest(List.of(new CartProduct("", "guitar", 100.0, 1))), // SKU vacío
-                new UpdateProductsRequest(List.of(new CartProduct("1111", "", 100.0, 1))), // Nombre vacío
-                new UpdateProductsRequest(List.of(new CartProduct("1111", "guitar", -100.0, 1))), // Precio negativo
-                new UpdateProductsRequest(List.of(new CartProduct("1111", "guitar", 100.0, 0))) // Cantidad no positiva
+                new UpdateProductsRequest(List.of(new CartProduct("", "guitar","jackson", "image.jpg", 100.0, 1))), // SKU vacío
+                new UpdateProductsRequest(List.of(new CartProduct("1111", "","jackson", "image.jpg", 100.0, 1))), // Nombre vacío
+                new UpdateProductsRequest(List.of(new CartProduct("1111", "guitar","jackson", "image.jpg", -100.0, 1))), // Precio negativo
+                new UpdateProductsRequest(List.of(new CartProduct("1111", "guitar", "jackson", "image.jpg",100.0, 0))), // Cantidad no positiva
+                new UpdateProductsRequest(List.of(new CartProduct("1111", "guitar", "", "image.jpg",100.0, 0)))
                 );
     }
 
@@ -266,11 +331,15 @@ public class CartIntegrationTest {
                         .sku("1")
                         .name("p1")
                         .price(1000.0)
+                        .brand("b1")
+                        .image("i1")
                         .quantity(1)
                         .build(),
                 CartProductEntity.builder()
                         .sku("2")
                         .name("p2")
+                        .brand("b2")
+                        .image("i2")
                         .price(1000.0)
                         .quantity(1)
                         .build());

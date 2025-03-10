@@ -10,4 +10,6 @@ public interface CartUseCases {
     Cart create(CreateCartRequest request);
     Cart updateProducts(Long cartId, List<CartProduct> products);
     Cart findById(Long id);
+    CartProduct updateProduct(Long cartId, String sku, CartProduct product);
+    void deleteProduct(Long cartId, String sku);
 }

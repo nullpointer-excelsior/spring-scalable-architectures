@@ -73,3 +73,7 @@ Flujo de Compra General:
 - Finalización de la Compra: Se completa el proceso de compra.
 
 En resumen, esta aplicación monolítica proporciona una funcionalidad completa para el proceso de pago y compra de un comercio electrónico, utilizando Spring Boot, JPA para la persistencia y un bus de eventos para la comunicación asíncrona.
+
+## BACKLOG
+- [ ] bug: HibernateException: A collection with orphan deletion was no longer referenced by the owning entity instance: com.benjamin.ecommerce.cart.entities.CartEntity.products URL: PUT **/cart/{}/products**
+- [ ] feat: create endpoints CartRestController POST /carts/{id}/products/{sku} DELETE /carts/{id}/products/{sku}

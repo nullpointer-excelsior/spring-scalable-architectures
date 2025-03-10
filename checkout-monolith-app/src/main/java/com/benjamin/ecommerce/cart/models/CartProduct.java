@@ -9,5 +9,7 @@ import lombok.Builder;
 public record CartProduct(
     @NotEmpty String sku,
     @NotEmpty String name,
+    @NotEmpty String brand,
+    String image,
     @Positive Double price,
     @Positive Integer quantity) {}

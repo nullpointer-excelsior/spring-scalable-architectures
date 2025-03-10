@@ -28,6 +28,12 @@ public class CartProductEntity {
     private Double price;
 
     @Column(nullable = false)
+    private String brand;
+
+    @Column
+    private String image;
+
+    @Column(nullable = false)
     private Integer quantity;
 
     @ManyToOne

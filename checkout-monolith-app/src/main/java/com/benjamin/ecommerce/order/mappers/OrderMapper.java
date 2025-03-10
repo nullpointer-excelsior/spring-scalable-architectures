@@ -15,4 +15,5 @@ public interface OrderMapper {
     OrderEntity toEntity(CreateOrder order, OrderStatus status);
 
     Order toModel(OrderEntity entity);
+
 }
