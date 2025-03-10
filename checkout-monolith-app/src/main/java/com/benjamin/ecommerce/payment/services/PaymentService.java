@@ -8,6 +8,7 @@ import com.benjamin.ecommerce.payment.dto.ValidatePaymentMethodResponse;
 import com.benjamin.ecommerce.payment.models.Payment;
 import com.benjamin.ecommerce.payment.models.PaymentStatus;
 import com.benjamin.ecommerce.purchase.dto.CreatePayment;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +20,10 @@ public class PaymentService implements PaymentUseCases {
     @Autowired
     private PaymentRepository repository;
 
+    @SneakyThrows
     public ValidatePaymentMethodResponse validatePaymentMethod(ValidatePaymentMethodRequest request) {
         var isValid = !request.details().isEmpty();
+        Thread.sleep(2500); // fake sleep
         return new ValidatePaymentMethodResponse(request.method().toString(), isValid);
     }
 

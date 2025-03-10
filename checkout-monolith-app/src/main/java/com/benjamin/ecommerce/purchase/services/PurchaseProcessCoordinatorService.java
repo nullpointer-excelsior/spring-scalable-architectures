@@ -18,6 +18,7 @@ import com.benjamin.ecommerce.shared.integration.EventBus;
 import com.benjamin.ecommerce.shared.utils.MapBuilder;
 import com.benjamin.ecommerce.shipping.models.DeliveryOption;
 import com.benjamin.ecommerce.shipping.models.Shipping;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -41,19 +42,21 @@ public class PurchaseProcessCoordinatorService implements PurchaseProcessCoordin
     @Autowired
     private PurchaseMapper purchaseMapper;
 
+    @SneakyThrows
     @Override
     public PurchaseCreatedResponse process(CreatePurchaseRequest request) {
         log.info("purchase-process-started: {}", request);
-        var o = new MapBuilder<>()
+        Thread.sleep(3000); // fake sleep
+        var order = new MapBuilder<>()
                 .record("products", request.order().products())
                 .record("amount", request.order().amount())
                 .build();
-        var p = new MapBuilder<>()
+        var payment = new MapBuilder<>()
                 .record("method", request.payment().method())
                 .record("details", request.payment().details())
                 .record("amount", request.payment().amount())
                 .build();
-        var s = new MapBuilder<>()
+        var shipping = new MapBuilder<>()
                 .record("fullname", request.shipping().fullname())
                 .record("address", request.shipping().address())
                 .record("city", request.shipping().city())
@@ -62,9 +65,9 @@ public class PurchaseProcessCoordinatorService implements PurchaseProcessCoordin
         var purchaseRequest = PurchaseRequestEntity.builder()
                 .method(request.payment().method())
                 .amount(request.payment().amount())
-                .orderRequest(o)
-                .paymentRequest(p)
-                .shippingRequest(s)
+                .orderRequest(order)
+                .paymentRequest(payment)
+                .shippingRequest(shipping)
                 .build();
 
         var purchase = PurchaseEntity.builder()
