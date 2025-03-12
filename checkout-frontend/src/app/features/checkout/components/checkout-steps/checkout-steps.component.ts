@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { UIState } from '@core/store/state/ui.state';
 import { Store } from '@ngxs/store';
-import { StepIndicatorComponent } from "../step-indicator/step-indicator.component";
+import { StepIndicatorComponent } from "@features/checkout/components/step-indicator/step-indicator.component";
+import { CheckoutStepsState } from '@core/store/state/checkout-steps.state';
 
 @Component({
   selector: 'app-checkout-steps',
@@ -14,5 +14,7 @@ import { StepIndicatorComponent } from "../step-indicator/step-indicator.compone
 })
 export class CheckoutStepsComponent {
   private store = inject(Store);
-  currentStep = this.store.selectSignal(UIState.getCheckoutCurrentStep);
+  currentStep = this.store.selectSignal(CheckoutStepsState.getCurrentStep);
+  loadingStep = this.store.selectSignal(CheckoutStepsState.getLoadingStep);
+  loadingStepMessage = this.store.selectSignal(CheckoutStepsState.getLoadingStepMessage);
 }

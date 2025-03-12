@@ -2,7 +2,7 @@ import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { CartState } from '@core/store/state/cart.state';
 import { CheckoutState } from '@core/store/state/checkout.state';
-import { UIState } from '@core/store/state/ui.state';
+import { CheckoutStepsState } from '@core/store/state/checkout-steps.state';
 import { UserState } from '@core/store/state/user.state';
 import { withNgxsReduxDevtoolsPlugin } from '@ngxs/devtools-plugin';
 import { provideStore } from '@ngxs/store';
@@ -22,7 +22,7 @@ export const appConfig: ApplicationConfig = {
       CartState,
       UserState,
       CheckoutState,
-      UIState
+      CheckoutStepsState
     ],
       withNgxsReduxDevtoolsPlugin()
     )

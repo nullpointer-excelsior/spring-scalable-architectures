@@ -54,8 +54,14 @@ The project is structured into several key areas:
 -   Angular 19
 -   NGXS
 -   TailwindCSS
+-   NGX-toastr
 
 ## Usage
 
 The application simulates a typical checkout process. Users can navigate through the shipping, billing, and confirmation steps, filling out forms and reviewing their order. The NGXS store manages the application state, allowing for easy data manipulation and retrieval.
 
+## Backlog
+
+- [x] refactorizar state UI separar en checkout-steps-state
+- [ ] succesflully payment page 
+- [ ] improve notification styles

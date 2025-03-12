@@ -12,8 +12,9 @@ import { getUsers } from "@core/utils/get-users";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { ProductService } from "@core/services/product.service";
 import { map, switchMap, tap } from "rxjs";
-import { EcommerceApi } from "../../services/ecommerce.api";
-import { CartService } from "../../services/cart.service";
+import { EcommerceApi } from "@core/services/ecommerce.api";
+import { CartService } from "@core/services/cart.service";
+import { StartLoadingStep, StopLoadingStep } from "../actions/checkout-steps.actions";
 
 @State<CheckoutModel>({
     name: 'checkout',
@@ -46,21 +47,23 @@ export class CheckoutState {
 
     private productService = inject(ProductService);
     private ecommerce = inject(EcommerceApi);
-    private cart = inject(CartService);
 
     @Action(SetBillingAction)
     setBilling(ctx: StateContext<CheckoutModel>, action: SetBillingAction) {
-        return this.ecommerce.validatePaymentMethod({
-            method: action.billing.payment.method,
-            details: {
-                ...action.billing.payment.details
-            }
-        }).pipe(
+        
+        return ctx.dispatch(new StartLoadingStep('Validating your payment method...')).pipe(
+            switchMap(() => this.ecommerce.validatePaymentMethod({
+                method: action.billing.payment.method,
+                details: {
+                    ...action.billing.payment.details
+                }
+            })),
             tap(res => {
                 if (res.valid) {
                     ctx.patchState({
                         billing: action.billing
                     });
+                    ctx.dispatch(new StopLoadingStep())
                 } else {
                     alert("Invalid payment")
                 }

@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
-import { EcommerceApi } from './ecommerce.api';
+import { EcommerceApi } from '@core/services/ecommerce.api';
 import { Store } from '@ngxs/store';
-import { CartState } from '../store/state/cart.state';
-import { CheckoutState } from '../store/state/checkout.state';
+import { CartState } from '@core/store/state/cart.state';
+import { CheckoutState } from '@core/store/state/checkout.state';
 
 @Injectable({
   providedIn: 'root'

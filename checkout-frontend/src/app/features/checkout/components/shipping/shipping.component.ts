@@ -3,13 +3,13 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Delivery } from '@core/models/shipping.model';
 import { CreateRandomCheckoutAction, SetShippingAction } from '@core/store/actions/checkout.actions';
-import { SetCurrentStep } from '@core/store/actions/ui.actions';
 import { FormFactoryService } from '@features/checkout/services/form-factory.service';
 import { Store } from '@ngxs/store';
 import { InputTextComponent } from '@shared/components/input-text/input-text.component';
 import { CheckoutButtonDirective } from '@shared/directives/checkout-button.directive';
 import { switchMap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { SetCurrentStep } from '@core/store/actions/checkout-steps.actions';
 
 @UntilDestroy()
 @Component({

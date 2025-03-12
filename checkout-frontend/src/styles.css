@@ -9,6 +9,10 @@
     @apply bg-slate-900 rounded-md p-12 m-2.5 shadow-lg;
   }
 
+  .container-step-loader {
+    @apply bg-purple-600 rounded-md p-12 m-2.5 shadow-lg;
+  }
+
   .card-step {
     @apply p-2.5 m-2.5;
   }
