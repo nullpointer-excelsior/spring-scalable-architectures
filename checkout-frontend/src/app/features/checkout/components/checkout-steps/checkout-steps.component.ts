@@ -3,13 +3,12 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Actions, ofActionCompleted, ofActionDispatched, ofActionErrored, ofActionSuccessful, Store } from '@ngxs/store';
 import { StepIndicatorComponent } from "@features/checkout/components/step-indicator/step-indicator.component";
 import { CheckoutStepsState } from '@core/store/state/checkout-steps.state';
-import { SetBillingAction, SetShippingAction } from '@core/store/actions/checkout.actions';
+import { CreatePurchaseAction, CreateRandomCheckoutAction, SetBillingAction, SetShippingAction } from '@core/store/actions/checkout.actions';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Router } from '@angular/router';
 import { map, mergeMap, take, tap } from 'rxjs';
 import { SetCurrentStepAction, SetErrorStepAction, StartLoadingStepAction, StopLoadingStepAction } from '@core/store/actions/checkout-steps.actions';
 import { ToastrService } from 'ngx-toastr';
-import { CreatePurchaseAction } from '@core/store/actions/purchase.actions';
 import { CheckoutState } from '@core/store/state/checkout.state';
 
 @UntilDestroy()
@@ -34,6 +33,7 @@ export class CheckoutStepsComponent implements OnInit {
   errorStepMessage = this.store.selectSignal(CheckoutStepsState.getErrorStepMessage);
 
   ngOnInit(): void {
+    this.store.dispatch(new CreateRandomCheckoutAction())
     this.store.dispatch(new SetCurrentStepAction(1))
     // succesfully shipping step flow
     this.actions$

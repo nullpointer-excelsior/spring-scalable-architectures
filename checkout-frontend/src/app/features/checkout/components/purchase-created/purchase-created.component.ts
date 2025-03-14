@@ -1,8 +1,8 @@
-import { Component, inject } from '@angular/core';
-import { Store } from '@ngxs/store';
-import { ConfirmationItemSummaryComponent } from '../confirmation-item-summary/confirmation-item-summary.component';
-import { PurchaseState } from '@core/store/state/purchase.state';
 import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { CheckoutState } from '@core/store/state/checkout.state';
+import { ConfirmationItemSummaryComponent } from '@features/checkout/components/confirmation-item-summary/confirmation-item-summary.component';
+import { Store } from '@ngxs/store';
 
 @Component({
   selector: 'app-purchase-created',
@@ -15,5 +15,5 @@ import { CommonModule } from '@angular/common';
 })
 export class PurchaseCreatedComponent {
   private store = inject(Store)
-  purchase = this.store.selectSignal(PurchaseState.getPurchase)
+  purchase = this.store.selectSignal(CheckoutState.getPurchase)
 }

@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { CreatePurchaseAction } from '@core/store/actions/purchase.actions';
+import { CreatePurchaseAction } from '@core/store/actions/checkout.actions';
 import { CartState } from '@core/store/state/cart.state';
 import { CheckoutState } from '@core/store/state/checkout.state';
 import { CartListComponent } from "@features/checkout/components/cart-list/cart-list.component";

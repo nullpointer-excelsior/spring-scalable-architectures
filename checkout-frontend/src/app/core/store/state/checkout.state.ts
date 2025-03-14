@@ -6,7 +6,7 @@ import { Delivery } from "@core/models/shipping.model";
 import { EcommerceApi } from "@core/services/ecommerce.api";
 import { ProductService } from "@core/services/product.service";
 import { CreateCartAction } from "@core/store/actions/cart.actions";
-import { CreateRandomCheckoutAction, SetBillingAction, SetContactInfoAction, SetShippingAction } from "@core/store/actions/checkout.actions";
+import { CreatePurchaseAction, CreateRandomCheckoutAction, SetBillingAction, SetContactInfoAction, SetShippingAction } from "@core/store/actions/checkout.actions";
 import { SetUserAction } from "@core/store/actions/user.actions";
 import { CartState } from "@core/store/state/cart.state";
 import { getRandomElements } from "@core/utils/get-random-elements";
@@ -38,6 +38,12 @@ import { map, tap } from "rxjs";
             fullname: '',
             address: '',
             city: ''
+        },
+        purchase: {
+            id: null,
+            order: null,
+            payment: null,
+            shipping: null
         }
     }
 })
@@ -131,6 +137,18 @@ export class CheckoutState {
         )
     }
 
+    @Action(CreatePurchaseAction)
+    createPurchase(ctx: StateContext<CheckoutModel>, action: CreatePurchaseAction) {
+        return this.ecommerce.processPurchase(action.purchase).pipe(
+            tap(res => ctx.patchState({
+                purchase: {
+                    id: res.purchaseId,
+                    ...action.purchase
+                }
+            }))
+        )
+    }
+
     @Selector()
     static getShipping(state: CheckoutModel) {
         return state.shipping;
@@ -174,5 +192,10 @@ export class CheckoutState {
     @Selector()
     static getPaymentMethodStatus(state: CheckoutModel) {
         return state.billing.payment.methodStatus
+    }
+
+    @Selector()
+    static getPurchase(state: CheckoutModel) {
+        return state.purchase
     }
 }
