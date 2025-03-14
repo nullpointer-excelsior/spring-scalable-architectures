@@ -2,10 +2,12 @@ import { Component, inject, input } from '@angular/core';
 import { ProductModel } from '@core/models/product.model';
 import { Store } from '@ngxs/store';
 import { DeleteCartProductAction, UpdateCartProductAction } from '@core/store/actions/cart.actions';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-cart-list',
   imports: [
+    CommonModule
   ],
   templateUrl: './cart-list.component.html'
 })
