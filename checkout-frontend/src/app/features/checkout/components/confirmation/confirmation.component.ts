@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { CreatePurchaseAction } from '@core/store/actions/checkout.actions';
 import { CartState } from '@core/store/state/cart.state';
@@ -15,6 +16,7 @@ import { CheckoutButtonDirective } from '@shared/directives/checkout-button.dire
     CartListComponent,
     CheckoutButtonDirective,
     ConfirmationItemSummaryComponent,
+    CommonModule
   ],
   templateUrl: './confirmation.component.html'
 })

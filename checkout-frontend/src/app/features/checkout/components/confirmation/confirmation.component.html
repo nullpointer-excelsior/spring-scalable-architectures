@@ -11,7 +11,7 @@
         <hr class="w-full my-4 border-gray-600">
         <div class="flex justify-between">
             <p class="text-base font-bold text-gray-500">AMOUNT:</p>
-            <p class="text-base text-green-500">$ {{ summary().amount }}</p>
+            <p class="text-base text-green-500">{{ summary().amount | currency:'USD':'symbol':'1.2-2'}}</p>
         </div>
         <div class="flex justify-center my-8">
             <button appCheckoutButton (click)="onConfirm()">
