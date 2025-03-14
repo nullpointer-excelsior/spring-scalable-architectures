@@ -23,7 +23,7 @@ public class PaymentService implements PaymentUseCases {
     @SneakyThrows
     public ValidatePaymentMethodResponse validatePaymentMethod(ValidatePaymentMethodRequest request) {
         var isValid = !request.details().isEmpty();
-        Thread.sleep(2500); // fake sleep
+        Thread.sleep(700); // fake sleep
         return new ValidatePaymentMethodResponse(request.method().toString(), isValid);
     }
 
