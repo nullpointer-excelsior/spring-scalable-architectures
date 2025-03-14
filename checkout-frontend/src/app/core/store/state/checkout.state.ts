@@ -3,6 +3,8 @@ import { PaymentMethod } from "@core/models/billing.model";
 import { CartModel } from "@core/models/cart.model";
 import { CheckoutModel } from "@core/models/checkout.model";
 import { Delivery } from "@core/models/shipping.model";
+import { EcommerceApi } from "@core/services/ecommerce.api";
+import { ProductService } from "@core/services/product.service";
 import { CreateCartAction } from "@core/store/actions/cart.actions";
 import { CreateRandomCheckoutAction, SetBillingAction, SetContactInfoAction, SetShippingAction } from "@core/store/actions/checkout.actions";
 import { SetUserAction } from "@core/store/actions/user.actions";
@@ -10,11 +12,7 @@ import { CartState } from "@core/store/state/cart.state";
 import { getRandomElements } from "@core/utils/get-random-elements";
 import { getUsers } from "@core/utils/get-users";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
-import { ProductService } from "@core/services/product.service";
-import { map, switchMap, tap } from "rxjs";
-import { EcommerceApi } from "@core/services/ecommerce.api";
-import { CartService } from "@core/services/cart.service";
-import { StartLoadingStep, StopLoadingStep } from "../actions/checkout-steps.actions";
+import { map, tap } from "rxjs";
 
 @State<CheckoutModel>({
     name: 'checkout',
@@ -25,6 +23,7 @@ import { StartLoadingStep, StopLoadingStep } from "../actions/checkout-steps.act
                 fullname: 'juan perez',
             },
             payment: {
+                methodStatus: "unchecked",
                 method: PaymentMethod.CreditCard,
                 details: {
                     cardName: 'j card',
@@ -50,26 +49,27 @@ export class CheckoutState {
 
     @Action(SetBillingAction)
     setBilling(ctx: StateContext<CheckoutModel>, action: SetBillingAction) {
-        
-        return ctx.dispatch(new StartLoadingStep('Validating your payment method...')).pipe(
-            switchMap(() => this.ecommerce.validatePaymentMethod({
-                method: action.billing.payment.method,
-                details: {
-                    ...action.billing.payment.details
-                }
-            })),
-            tap(res => {
-                if (res.valid) {
-                    ctx.patchState({
-                        billing: action.billing
-                    });
-                    ctx.dispatch(new StopLoadingStep())
-                } else {
-                    alert("Invalid payment")
-                }
+        return this.ecommerce.validatePaymentMethod({
+            method: action.billing.payment.method,
+            details: {
+                ...action.billing.payment.details
+            }
+        }).pipe(
+            map(res => res.valid ? 'accepted' : 'failed'),
+            tap(methodStatus => {
+                ctx.patchState({
+                    billing: {
+                        ...action.billing,
+                        payment: {
+                            ...action.billing.payment,
+                            methodStatus
+                        },
+                    }
+                });
+
             })
         )
-       
+
     }
 
     @Action(SetContactInfoAction)
@@ -111,12 +111,18 @@ export class CheckoutState {
                 city: user.address.city
             }
         })
+        const quantityLimit = 15
         return this.productService.getProducts().pipe(
+            map(products => products.filter(product => product.quantity >= quantityLimit)),
+            map(products => products.map(product => ({
+                ...product,
+                quantity: Math.floor(Math.random() * quantityLimit) + 1
+            }))),
             map(products => getRandomElements(products, 7)),
             tap(cart => {
                 ctx.dispatch([
                     new SetUserAction(user),
-                    new CreateCartAction({ 
+                    new CreateCartAction({
                         products: cart,
                         user,
                     })
@@ -161,7 +167,12 @@ export class CheckoutState {
     }
 
     @Selector()
-    static getPayment(state: CheckoutModel){
+    static getPayment(state: CheckoutModel) {
         return state.billing.payment
+    }
+
+    @Selector()
+    static getPaymentMethodStatus(state: CheckoutModel) {
+        return state.billing.payment.methodStatus
     }
 }

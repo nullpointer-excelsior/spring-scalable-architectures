@@ -1,14 +1,14 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { CreatePurchaseAction } from '@core/store/actions/purchase.actions';
 import { CartState } from '@core/store/state/cart.state';
 import { CheckoutState } from '@core/store/state/checkout.state';
 import { CartListComponent } from "@features/checkout/components/cart-list/cart-list.component";
 import { ConfirmationItemSummaryComponent } from "@features/checkout/components/confirmation-item-summary/confirmation-item-summary.component";
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
 import { CheckoutButtonDirective } from '@shared/directives/checkout-button.directive';
-import { CheckoutService } from '@core/services/checkout.service';
-import { ToastrService } from 'ngx-toastr';
-import { SetCurrentStep, StartLoadingStep, StopLoadingStep } from '@core/store/actions/checkout-steps.actions';
 
+@UntilDestroy()
 @Component({
   selector: 'app-confirmation',
   imports: [
@@ -18,26 +18,40 @@ import { SetCurrentStep, StartLoadingStep, StopLoadingStep } from '@core/store/a
   ],
   templateUrl: './confirmation.component.html'
 })
-export class ConfirmationComponent implements OnInit {
+export class ConfirmationComponent {
 
   private store: Store = inject(Store);
-  private checkout = inject(CheckoutService)
-  private toastr = inject(ToastrService)
   products = this.store.selectSignal(CartState.getProducts);
   summary = this.store.selectSignal(CheckoutState.getCheckoutSummary);
 
-  ngOnInit(): void {
-    this.store.dispatch(new SetCurrentStep(3))
-  }
-
   onConfirm() {
-    this.store.dispatch(new StartLoadingStep('Processing your payment...'))
-    this.checkout.processPurchase()
-      .subscribe({
-        next: () => this.toastr.success("purchase process started", 'Order started'),
-        error: (err) => this.toastr.error(err.message, "Error purchase"),
-        complete: () => this.store.dispatch(new StopLoadingStep())
-      })
+    const products = this.store.selectSnapshot(CartState.getProducts)
+    const amount = this.store.selectSnapshot(CartState.getAmount)
+    const shipping = this.store.selectSnapshot(CheckoutState.getShipping)
+    const payment = this.store.selectSnapshot(CheckoutState.getPayment)
+    const purchase = {
+      order: {
+        products: products.map(p => ({
+          name: p.name,
+          price: p.price,
+          quantity: p.quantity,
+          sku: p.sku
+        })),
+        amount
+      },
+      payment: {
+        method: payment.method,
+        details: {
+          ...payment.details
+        },
+        amount
+      },
+      shipping: {
+        ...shipping,
+        option: shipping.delivery,
+      }
+    }
+    this.store.dispatch(new CreatePurchaseAction(purchase))
   }
 
 }

@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Store } from '@ngxs/store';
+import { SetCurrentStepAction } from '@core/store/actions/checkout-steps.actions';
 
 @Component({
   selector: 'app-step-indicator',
@@ -12,9 +14,15 @@ import { RouterLink } from '@angular/router';
   styles: ``
 })
 export class StepIndicatorComponent {
+
   currentStep = input(0)
   step = input(0)
   name = input('')
   link = input('')
   color = input('blue-500')
+  private store = inject(Store)
+
+  onClick() {
+    this.store.dispatch(new SetCurrentStepAction(this.step()))
+  }
 }

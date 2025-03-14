@@ -1,21 +1,40 @@
 <div class="flex items-center justify-center space-x-8 py-8">
-    <app-step-indicator name="SHIPPING" link="/shipping" [step]="1" [currentStep]="currentStep()" ></app-step-indicator>
-    <app-step-indicator name="BILLING" link="/billing" [step]="2" [currentStep]="currentStep()" ></app-step-indicator>
-    <app-step-indicator name="REVIEW & CONFIRMATION" link="/confirmation" [step]="3" [currentStep]="currentStep()" ></app-step-indicator>
+    <app-step-indicator name="SHIPPING" link="/shipping" [step]="1" [currentStep]="currentStep()"></app-step-indicator>
+    <app-step-indicator name="BILLING" link="/billing" [step]="2" [currentStep]="currentStep()"></app-step-indicator>
+    <app-step-indicator name="REVIEW & CONFIRMATION" link="/confirmation" [step]="3"
+        [currentStep]="currentStep()"></app-step-indicator>
 </div>
 <div class="container mx-auto">
+    <!-- Main content -->
+    @if (!loadingStep() && !isErrorStep()) {
+    <ng-content></ng-content>
+    }
+    <!-- Loading -->
     @if (loadingStep()) {
-        <div class="flex flex-col container-step-loader">
-            <div class="flex flex-col items-center justify-center min-h-[200px] space-y-4">
-                <div class="relative flex space-x-2">
-                  <div class="w-8 h-8 bg-blue-400 rounded-full animate-bounce"></div>
-                  <div class="w-8 h-8 bg-blue-400 rounded-full animate-bounce [animation-delay:-0.2s]"></div>
-                  <div class="w-8 h-8 bg-blue-400 rounded-full animate-bounce [animation-delay:-0.4s]"></div>
-                </div>
-                <p class="text-md text-neutral-300">{{loadingStepMessage()}}</p>
-              </div>
+    <div class="flex flex-col container-step-loader">
+        <div class="flex flex-col items-center justify-center min-h-[200px] space-y-4">
+            <div class="relative flex space-x-2">
+                <div class="w-8 h-8 bg-blue-400 rounded-full animate-bounce"></div>
+                <div class="w-8 h-8 bg-blue-400 rounded-full animate-bounce [animation-delay:-0.2s]"></div>
+                <div class="w-8 h-8 bg-blue-400 rounded-full animate-bounce [animation-delay:-0.4s]"></div>
+            </div>
+            <p class="text-md text-neutral-300">{{loadingStepMessage()}}</p>
         </div>
-    } @else {
-        <ng-content></ng-content>
+    </div>
+    }
+    <!-- Error -->
+    @if (isErrorStep()) {
+    <div class="flex flex-col container-step-loader">
+        <div class="flex flex-col items-center justify-center min-h-[200px] space-y-4">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-24 h-24 text-red-400"
+                fill="currentColor">
+                <circle cx="12" cy="12" r="10" class="stroke-red-400" stroke-width="2" fill="none" />
+                <circle cx="9" cy="10" r="1.5" class="fill-red-400" />
+                <circle cx="15" cy="10" r="1.5" class="fill-red-400" />
+                <path d="M8,16 Q12,12 16,16" class="stroke-red-400" stroke-width="2" fill="none" />
+            </svg>
+            <p class="text-md text-neutral-300">{{errorStepMessage()}}</p>
+        </div>
+    </div>
     }
 </div>

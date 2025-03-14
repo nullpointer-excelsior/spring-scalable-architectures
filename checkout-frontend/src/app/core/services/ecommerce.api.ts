@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { CartResponse, CreateCartRequest, CreatePurchaseRequest, ValidatePaymentMethodRequest, ValidatePaymentMethodResponse } from "@app/core/dto/ecommerce.dto";
+import { CartResponse, CreateCartRequest, CreatePurchaseRequest, PurchaseCretaedResponse, ValidatePaymentMethodRequest, ValidatePaymentMethodResponse } from "@app/core/dto/ecommerce.dto";
 import { ProductModel } from "@core/models/product.model";
 import { Observable } from "rxjs";
 import { environment } from '../../../environments/environment';
@@ -36,8 +36,8 @@ export class EcommerceApi {
         return this.http.post<ValidatePaymentMethodResponse>(`${environment.checkoutUrl}/payment-methods/validate`, request);
     }
 
-    processPurchase(request: CreatePurchaseRequest){
-        return this.http.post(`${environment.checkoutUrl}/purchases/process`, request)
+    processPurchase(request: CreatePurchaseRequest): Observable<PurchaseCretaedResponse>{
+        return this.http.post<PurchaseCretaedResponse>(`${environment.checkoutUrl}/purchases/process`, request)
     } 
 
 }

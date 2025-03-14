@@ -17,7 +17,9 @@ export enum PaymentMethod {
     DebitCard = 'DEBIT_CARD'
 }
 
+
 export interface PaymentModel {
+    methodStatus: 'accepted' | 'failed' | 'unchecked';
     method: PaymentMethod;
     details: CreditCardModel;
 }

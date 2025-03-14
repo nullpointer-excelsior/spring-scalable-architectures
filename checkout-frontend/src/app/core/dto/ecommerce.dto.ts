@@ -61,3 +61,8 @@ export type CreatePurchaseRequest = {
     option: string;
   }
 }
+
+export type PurchaseCretaedResponse = {
+  purchaseId: number;
+  purchaseRequestId: number;
+}

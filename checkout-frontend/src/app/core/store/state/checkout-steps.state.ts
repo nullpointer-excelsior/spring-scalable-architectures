@@ -1,11 +1,14 @@
 import { Injectable } from "@angular/core";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
-import { SetCurrentStep, StartLoadingStep, StopLoadingStep } from "@core/store/actions/checkout-steps.actions";
+import { CleanErrorStepAction, SetCurrentStepAction, SetErrorStepAction, StartLoadingStepAction, StopLoadingStepAction } from "@core/store/actions/checkout-steps.actions";
 
 export interface CheckoutSteps {
     currentStep: number;
     loadingStep: boolean;
     loadingStepMessage: string;
+    errorStep: boolean;
+    errorStepMessage: string;
+    
 }
 
 @State<CheckoutSteps>({
@@ -13,7 +16,9 @@ export interface CheckoutSteps {
     defaults: {
         currentStep: 1,
         loadingStep: false,
-        loadingStepMessage: ''
+        loadingStepMessage: '',
+        errorStep: false,
+        errorStepMessage: ''
     }
 })
 @Injectable({
@@ -21,27 +26,44 @@ export interface CheckoutSteps {
 })
 export class CheckoutStepsState {
 
-    @Action(SetCurrentStep)
-    setCheckoutCurrentStep(ctx: StateContext<CheckoutSteps>, action: SetCurrentStep) {
+    @Action(SetCurrentStepAction)
+    setCheckoutCurrentStep(ctx: StateContext<CheckoutSteps>, action: SetCurrentStepAction) {
+        ctx.dispatch(new StopLoadingStepAction())
+        ctx.dispatch(new CleanErrorStepAction())
         ctx.patchState({
             currentStep: action.step
         })
     }
 
-    @Action(StartLoadingStep)
-    startLoadingSteps(ctx: StateContext<CheckoutSteps>, action: StartLoadingStep) {
-        const state = ctx.getState();
+    @Action(StartLoadingStepAction)
+    startLoadingSteps(ctx: StateContext<CheckoutSteps>, action: StartLoadingStepAction) {
         ctx.patchState({
             loadingStep: true,
             loadingStepMessage: action.message
         })
     }
 
-    @Action(StopLoadingStep)
+    @Action(CleanErrorStepAction)
+    clearErrorStepAction(ctx: StateContext<CheckoutSteps>, action: CleanErrorStepAction) {
+        ctx.patchState({
+            errorStep: false,
+            errorStepMessage: ''
+        })
+    }
+
+    @Action(StopLoadingStepAction)
     stopLoadingStep(ctx: StateContext<CheckoutSteps>) {
         ctx.patchState({
             loadingStep: false,
             loadingStepMessage: ''
+        })
+    }
+
+    @Action(SetErrorStepAction)
+    setErrorStep(ctx: StateContext<CheckoutSteps>, action: SetErrorStepAction){
+        ctx.patchState({
+            errorStep: true,
+            errorStepMessage: action.message
         })
     }
 
@@ -58,5 +80,15 @@ export class CheckoutStepsState {
     @Selector()
     static getLoadingStepMessage(state: CheckoutSteps) {
         return state.loadingStepMessage;
+    }
+
+    @Selector()
+    static isErrorStep(state: CheckoutSteps) {
+        return state.errorStep;
+    }
+
+    @Selector()
+    static getErrorStepMessage(state: CheckoutSteps) {
+        return state.errorStepMessage;
     }
 }

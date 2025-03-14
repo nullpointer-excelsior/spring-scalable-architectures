@@ -14,7 +14,7 @@
         </div>
     </div>
     <div class="flex justify-center my-8">
-        <button appCheckoutButton routerLink="/confirmation" (click)="onContinue()" [disabled]="!form.valid">
+        <button appCheckoutButton (click)="onContinue()" [disabled]="!form.valid">
             Continue
         </button>
     </div>

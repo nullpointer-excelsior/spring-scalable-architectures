@@ -3,7 +3,7 @@
       'bg-orange-500 text-white border-orange-500': currentStep() >= step(),
       'bg-gray-700 text-gray-300 border-gray-300': currentStep() < step()
     }">
-        <a [routerLink]="link()" >
+        <a [routerLink]="link()" (click)="onClick()" >
             {{ step() }}
         </a>
     </div>

@@ -15,7 +15,10 @@ export class SetPaymentMethodAction {
 
 export class SetBillingAction {
     static readonly type = '[Checkout] Set Billing';
-    constructor(public billing: BillingModel) { }
+    constructor(public billing: {
+        contactInfo: ContactInfoModel;
+        payment: Omit<PaymentModel, 'methodStatus'>;
+      }) { }
 }
 
 export class CreateRandomCheckoutAction {
