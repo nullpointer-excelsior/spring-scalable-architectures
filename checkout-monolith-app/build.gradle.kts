@@ -22,10 +22,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-
+	implementation("org.postgresql:postgresql:42.7.5")
 	runtimeOnly("com.h2database:h2")
-
-
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.assertj:assertj-core:3.27.2")
