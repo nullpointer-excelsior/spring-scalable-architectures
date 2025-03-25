@@ -51,7 +51,7 @@ public class PaymentMethodRestControllerTest {
   @Test
   @DisplayName("WHEN request POST /payment-methods/validate with invalid ValidatePaymentMethodRequest THEN response 409")
   public void validatePaymentMethodNullTest() throws Exception {
-    var body = Map.of("details", Map.of("key", "value"));
+    var body = Map.of("details", Map.of("key", "value"), "method", "INVALID_METHOD");
     when(paymentUseCasesMock.validatePaymentMethod(any()))
             .thenReturn(new ValidatePaymentMethodResponse("CREDIT_CARD", true));
 
