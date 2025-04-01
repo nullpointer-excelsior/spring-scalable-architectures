@@ -22,7 +22,14 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation("org.springframework.boot:spring-boot-starter-aop")
 	implementation("org.postgresql:postgresql:42.7.5")
+	implementation("io.micrometer:micrometer-registry-otlp")
+	implementation("io.micrometer:micrometer-tracing-bridge-brave")
+	implementation("io.zipkin.contrib.otel:encoder-brave:0.1.0")
+	
+	runtimeOnly("com.github.loki4j:loki-logback-appender:1.5.2")
 	runtimeOnly("com.h2database:h2")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")

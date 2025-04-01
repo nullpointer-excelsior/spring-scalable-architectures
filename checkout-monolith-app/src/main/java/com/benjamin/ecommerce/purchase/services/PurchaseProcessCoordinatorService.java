@@ -19,14 +19,14 @@ import com.benjamin.ecommerce.shared.utils.MapBuilder;
 import com.benjamin.ecommerce.shipping.models.DeliveryOption;
 import com.benjamin.ecommerce.shipping.models.Shipping;
 import lombok.SneakyThrows;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
-@Log4j2
+@Slf4j
 @Component
 public class PurchaseProcessCoordinatorService implements PurchaseProcessCoordinator {
 

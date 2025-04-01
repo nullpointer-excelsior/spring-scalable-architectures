@@ -3,11 +3,11 @@ package com.benjamin.ecommerce.shared.spring.components;
 import com.benjamin.ecommerce.shared.integration.Event;
 import com.benjamin.ecommerce.shared.integration.EventBus;
 import lombok.AllArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
-@Log4j2
+@Slf4j
 @Component
 @AllArgsConstructor
 public class ApplicationEventBus implements EventBus {

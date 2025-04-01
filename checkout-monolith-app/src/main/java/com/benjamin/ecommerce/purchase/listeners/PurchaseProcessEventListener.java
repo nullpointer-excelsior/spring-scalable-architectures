@@ -4,12 +4,12 @@ import com.benjamin.ecommerce.purchase.dto.CompletePurchase;
 import com.benjamin.ecommerce.shared.integration.events.*;
 import com.benjamin.ecommerce.purchase.PurchaseProcessCoordinator;
 import com.benjamin.ecommerce.shipping.models.ShippingStatus;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-@Log4j2
+@Slf4j
 @Component
 public class PurchaseProcessEventListener {
 

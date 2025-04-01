@@ -4,12 +4,12 @@ import com.benjamin.ecommerce.shared.integration.EventBus;
 import com.benjamin.ecommerce.shared.integration.events.CreateShippingEvent;
 import com.benjamin.ecommerce.shared.integration.events.ShippingCreatedEvent;
 import com.benjamin.ecommerce.shipping.ShippingUseCases;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-@Log4j2
+@Slf4j
 @Component
 public class ShippingListener {
 

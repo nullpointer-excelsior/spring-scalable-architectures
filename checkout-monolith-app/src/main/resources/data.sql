@@ -1,3 +1,4 @@
+TRUNCATE TABLE products;
 INSERT INTO products (sku, name, brand, price, quantity, image) VALUES
 (1, 'Judas Priest T-Shirt', 'Generic', 20000, 100, '/img/p1.webp'),
 (2, 'Beer six pack', 'Becker', 7000, 43, '/img/p2.webp'),

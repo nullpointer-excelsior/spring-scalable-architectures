@@ -6,11 +6,13 @@ import com.benjamin.ecommerce.order.OrderUseCases;
 import com.benjamin.ecommerce.order.models.Order;
 import com.benjamin.ecommerce.order.models.OrderStatus;
 import com.benjamin.ecommerce.purchase.dto.CreateOrder;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Log4j2
+@Slf4j
 @Service
 public class OrderService implements OrderUseCases {
 
