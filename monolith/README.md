@@ -1,82 +1,92 @@
-# Monolith
+# 🏛️ Monolith
 
-Este código representa una aplicación monolítica de comercio electrónico, específicamente la parte del proceso de pago y compra (checkout). Aquí hay un desglose de lo que hace cada componente principal:
+This code represents a monolithic e-commerce application, specifically focusing on the checkout and purchase process. Here’s a breakdown of what each major component does:
 
-## Estructura General:
+## 📂 General Structure:
 
-### Aplicación Monolítica:
-El código está organizado en un solo proyecto, lo que significa que todos los componentes (carrito, orden, pago, envío, productos) están dentro de la misma aplicación.
+### 🏗️ Monolithic Application:
+The code is organized into a single project, meaning all components (cart, order, payment, shipping, products) are within the same application.
 
-### Arquitectura:
-La aplicación sigue una arquitectura basada en capas, separando la lógica de negocio (servicios), la capa de persistencia (entidades y repositorios), la capa de presentación (controladores REST), y la capa de integración (eventos).
-Se utiliza Spring Boot para la configuración y el manejo de dependencias.
-Eventos:
-Utiliza un bus de eventos (EventBus) para desacoplar los componentes y permitir la comunicación asíncrona entre ellos. Esto es visible en los listeners y eventos definidos en el paquete shared/integration.
-Esto permite procesos como, crear una orden, luego un pago y por ultimo un envio, todos de manera asincrona.
-Componentes Principales:
+### 🏛️ Architecture:
+- The application follows a layered architecture, separating business logic (services), persistence layer (entities and repositories), presentation layer (REST controllers), and integration layer (events).
+- Uses **Spring Boot** for configuration and dependency management.
+- **Events:**
+  - Utilizes an **EventBus** for asynchronous communication between components, reducing tight coupling.
+  - Events are defined in the **shared/integration** package.
+  - This allows processes like order creation, payment processing, and shipping to happen asynchronously.
 
-### Carrito (Cart):
-Permite a los usuarios crear y gestionar carritos de compras.
-Incluye la creación, actualización y recuperación de carritos.
-Utiliza entidades (CartEntity, CartProductEntity, CartUserEntity) para la persistencia.
-Mappers (CartMapper, CartProductMapper, CartUserMapper) para convertir entre entidades y modelos.
-Controlador REST (CartRestController) para exponer los endpoints del carrito.
-Servicio (CartService) contiene la logica de negocio.
-### Órdenes (Order):
-Gestiona la creación de órdenes a partir de los carritos.
-Incluye la creación de órdenes y el manejo del estado de las órdenes.
-Utiliza entidades (OrderEntity, OrderProductEntity) para la persistencia.
-Mappers (OrderMapper, OrderProductMapper) para convertir entre entidades y modelos.
-Servicio (OrderService) contiene la logica de negocio.
-Listener de eventos (OrderListener) que reacciona a los eventos de creación de órdenes.
-### Pagos (Payment):
-Procesa los pagos de las órdenes.
-Incluye la validación de métodos de pago y la creación de registros de pago.
-Utiliza entidades (PaymentEntity) para la persistencia.
-Controlador REST (PaymentMethodRestController) para exponer los endpoints de pago.
-Servicio (PaymentService) contiene la logica de negocio.
-Listener de eventos (PaymentEventListener) que reacciona a los eventos de creación de pagos.
-### Productos (Products):
-Gestiona la información y el inventario de los productos.
-Incluye la actualización de la cantidad de productos en stock.
-Utiliza entidades (ProductEntity) para la persistencia.
-Controlador REST (ProductRestController) para exponer los endpoints de productos.
-Servicio (ProductService) contiene la logica de negocio.
-Listener de eventos (ProductListener) que reacciona a los eventos de actualizacion de stock de productos.
-### Compras (Purchase):
-Coordina el proceso de compra completo.
-Incluye la creación de órdenes, pagos y envíos.
-Utiliza entidades (PurchaseEntity, PurchaseRequestEntity) para la persistencia.
-Controlador REST (PurchaseRestController) para exponer los endpoints de compra.
-Servicio (PurchaseProcessCoordinatorService) contiene la logica de orquestacion de la compra.
-Listener de eventos (PurchaseProcessEventListener) que reacciona a los eventos del proceso de compra.
-### Envíos (Shipping):
-Gestiona el proceso de envío de las órdenes.
-Incluye la creación de registros de envío y la actualización del estado de los envíos.
-Utiliza entidades (ShippingEntity, DeliveryEntity) para la persistencia.
-Controlador REST (ShippingRestController) para exponer los endpoints de envío.
-Servicio (ShippingService) contiene la logica de negocio.
-Listener de eventos (ShippingListener) que reacciona a los eventos de creación de envios.
-Eventos e Integración (Shared/Integration):
-Define eventos para la comunicación asíncrona entre componentes.
-Incluye un bus de eventos (EventBus) para la distribución de eventos.
-Define eventos específicos para la creación de órdenes, pagos, envíos y la actualización de stock de productos.
-ApplicationEventBus, es la implementacion del EventBus.
-Flujo de Compra General:
+## 🔧 Core Components:
 
-- Creación del Carrito: Un usuario crea un carrito y agrega productos.
-- Proceso de Compra: El usuario inicia el proceso de compra.
-- Creación de la Orden: Se crea una orden a partir del carrito.
-- Proceso de Pago: Se procesa el pago de la orden.
-- Actualización del Stock: Se actualiza el stock de los productos comprados.
-- Creación del Envío: Se crea un registro de envío para la orden.
-- Finalización de la Compra: Se completa el proceso de compra.
+### 🛒 Cart:
+- Allows users to create and manage shopping carts.
+- Supports cart creation, updates, and retrieval.
+- Uses **CartEntity, CartProductEntity, CartUserEntity** for persistence.
+- Mappers (**CartMapper, CartProductMapper, CartUserMapper**) convert between entities and models.
+- REST Controller (**CartRestController**) exposes cart-related endpoints.
+- Service (**CartService**) contains business logic.
 
-En resumen, esta aplicación monolítica proporciona una funcionalidad completa para el proceso de pago y compra de un comercio electrónico, utilizando Spring Boot, JPA para la persistencia y un bus de eventos para la comunicación asíncrona.
+### 📦 Orders:
+- Manages order creation from shopping carts.
+- Includes order creation and state management.
+- Uses **OrderEntity, OrderProductEntity** for persistence.
+- Mappers (**OrderMapper, OrderProductMapper**) convert between entities and models.
+- Service (**OrderService**) contains business logic.
+- Event listener (**OrderListener**) reacts to order creation events.
 
-## BACKLOG
-- [x] feat: create endpoints CartRestController POST /carts/{id}/products/{sku} DELETE /carts/{id}/products/{sku}
+### 💳 Payments:
+- Processes payments for orders.
+- Validates payment methods and creates payment records.
+- Uses **PaymentEntity** for persistence.
+- REST Controller (**PaymentMethodRestController**) exposes payment-related endpoints.
+- Service (**PaymentService**) contains business logic.
+- Event listener (**PaymentEventListener**) reacts to payment creation events.
+
+### 🏬 Products:
+- Manages product information and inventory.
+- Updates stock quantities after purchases.
+- Uses **ProductEntity** for persistence.
+- REST Controller (**ProductRestController**) exposes product-related endpoints.
+- Service (**ProductService**) contains business logic.
+- Event listener (**ProductListener**) reacts to stock update events.
+
+### 🛍️ Purchase:
+- Coordinates the entire checkout process.
+- Handles order creation, payment processing, and shipping.
+- Uses **PurchaseEntity, PurchaseRequestEntity** for persistence.
+- REST Controller (**PurchaseRestController**) exposes purchase-related endpoints.
+- Service (**PurchaseProcessCoordinatorService**) orchestrates the purchase workflow.
+- Event listener (**PurchaseProcessEventListener**) reacts to purchase process events.
+
+### 🚚 Shipping:
+- Manages order shipping processes.
+- Creates shipping records and updates shipment status.
+- Uses **ShippingEntity, DeliveryEntity** for persistence.
+- REST Controller (**ShippingRestController**) exposes shipping-related endpoints.
+- Service (**ShippingService**) contains business logic.
+- Event listener (**ShippingListener**) reacts to shipping creation events.
+
+## 🔗 Events & Integration (Shared/Integration):
+- Defines events for asynchronous communication between components.
+- Uses an **EventBus** for event distribution.
+- Defines events for order creation, payments, shipping, and product stock updates.
+- **ApplicationEventBus** is the EventBus implementation.
+
+## 🛒 General Purchase Flow:
+1. **Cart Creation**: A user creates a cart and adds products.
+2. **Checkout Process**: The user initiates checkout.
+3. **Order Creation**: An order is generated from the cart.
+4. **Payment Processing**: The payment is processed.
+5. **Stock Update**: The stock is updated for purchased products.
+6. **Shipping Creation**: A shipping record is created for the order.
+7. **Purchase Completion**: The purchase process is finalized.
+
+## ✅ Summary
+This monolithic application provides a complete e-commerce checkout and purchase process, utilizing **Spring Boot**, **JPA** for persistence, and an **event bus** for asynchronous communication.
+
+## 📌 BACKLOG
+- [x] feat: create endpoints **CartRestController** POST /carts/{id}/products/{sku} DELETE /carts/{id}/products/{sku}
 - [x] feat: fake sleep for payment-methods/validate
 - [x] feat: fake sleep for payment-process
-- [ ] feat: simulate error payment
-- [ ] feat: telemetry
+- [x] feat: simulate error payment
+- [x] feat: telemetry
+
