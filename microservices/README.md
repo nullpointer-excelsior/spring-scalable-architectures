@@ -44,6 +44,20 @@ This code represents a microservices-based e-commerce application, specifically 
 ## 📌 Summary
 This microservices-based application provides a scalable and maintainable structure for **Cart** and **Products** management. It utilizes **Spring Boot** for service implementation and **Spring Cloud Gateway** for API management.
 
+## 🔧 Running the Project
+
+Execute the project with Gradle:
+
+```bash
+
+# tests
+./gradlew test
+
+# run app
+./gradlew bootRun
+
+```
+
 ## 📌 BACKLOG
 - [ ] feat: Implement API Gateway with Spring Cloud Gateway
 - [x] feat: Create Cart MicroService

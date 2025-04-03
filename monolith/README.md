@@ -1,6 +1,7 @@
 # 🏛️ Monolith
 
-This code represents a monolithic e-commerce application, specifically focusing on the checkout and purchase process. Here’s a breakdown of what each major component does:
+This code represents a monolithic e-commerce application, specifically designed to be **scalable** and **maintainable** through well-defined **modules** and **event-driven communication**. The system follows a structured approach to separate concerns while maintaining a unified deployment. Below is a breakdown of its major components:
+
 
 ## 📂 General Structure:
 
@@ -69,6 +70,7 @@ The code is organized into a single project, meaning all components (cart, order
 - Defines events for asynchronous communication between components.
 - Uses an **EventBus** for event distribution.
 - Defines events for order creation, payments, shipping, and product stock updates.
+- Enables **loose coupling** between services by using event-driven communication.
 - **ApplicationEventBus** is the EventBus implementation.
 
 ## 🛒 General Purchase Flow:
@@ -82,6 +84,20 @@ The code is organized into a single project, meaning all components (cart, order
 
 ## ✅ Summary
 This monolithic application provides a complete e-commerce checkout and purchase process, utilizing **Spring Boot**, **JPA** for persistence, and an **event bus** for asynchronous communication.
+
+## 🔧 Running the Project
+
+Execute the project with Gradle:
+
+```bash
+
+# tests
+./gradlew test
+
+# run app
+./gradlew bootRun
+
+```
 
 ## 📌 BACKLOG
 - [x] feat: create endpoints **CartRestController** POST /carts/{id}/products/{sku} DELETE /carts/{id}/products/{sku}
