@@ -8,9 +8,11 @@ services:
     environment:
       POSTGRES_USER: checkout 
       POSTGRES_PASSWORD: checkout
-      POSTGRES_DB: checkout
+      # POSTGRES_DB: checkout
     ports:
       - "5432:5432"
+    volumes:
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
   #    collector:
   #        image: otel/opentelemetry-collector:0.103.1
   #        extra_hosts: ['host.docker.internal:host-gateway']
