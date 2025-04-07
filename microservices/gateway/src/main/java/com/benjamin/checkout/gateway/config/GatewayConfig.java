@@ -12,10 +12,10 @@ public class GatewayConfig {
     @Bean
     public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route("productService", r -> r.path("/products/**")
+                .route("product-service", r -> r.path("/products/**")
                         .uri("http://localhost:8081")
                 )
-                .route("cartService", r -> r.path("/carts/**")
+                .route("cart-service", r -> r.path("/carts/**")
                         .uri("http://localhost:8082")
                 )
                 .build();
