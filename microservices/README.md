@@ -37,9 +37,17 @@ This code represents a microservices-based e-commerce application, specifically 
 - Defines routes for **Cart** and **Products** services.
 
 ## 🔗 Service Communication:
-- Services communicate via **REST APIs**.
-- The **API Gateway** routes requests based on service-specific paths.
-- Authentication and authorization can be implemented using **JWT tokens**.
+- The **Gateway** is the contact point for clients.
+- To access product information, the client makes a request to the Gateway (`/products/**`), which then routes it to the **Products Microservice** (running on `http://localhost:8081`).
+- To interact with shopping carts, the client makes a request to the Gateway (`/carts/**`), which then routes it to the **Cart Microservice** (running on `http://localhost:8082`).
+- The **Products** and **Cart** microservices are independent of each other in this shown architecture. No direct communication between them is observed in the provided files.
+
+## 🛠️ Key Technologies
+
+- **Spring Boot:** Base framework for building Java applications quickly.
+- **Spring Cloud Gateway:** Provides API routing and security for the microservices architecture.
+- **Spring Security:** Framework for authentication and authorization.
+- **Brave OTLP:** Library for instrumentation and export of distributed tracing using the OpenTelemetry Protocol (OTLP).
 
 ## 📌 Summary
 This microservices-based application provides a scalable and maintainable structure for **Cart** and **Products** management. It utilizes **Spring Boot** for service implementation and **Spring Cloud Gateway** for API management.
@@ -59,9 +67,12 @@ Execute the project with Gradle:
 ```
 
 ## 📌 BACKLOG
-- [ ] feat: Implement API Gateway with Spring Cloud Gateway
+- [x] feat: Implement API Gateway with Spring Cloud Gateway
 - [x] feat: Create Cart MicroService
 - [x] feat: Create Products MicroService
-- [ ] feat: Implement JWT authentication
+- [ ] feat: Dockerize architecture
+- [ ] feat: Service discovery
+- [ ] feat: Config Server
+- [ ] feat: Implement JWT authentication With Authorization Server
 
 
