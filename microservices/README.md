@@ -58,6 +58,21 @@ Execute the project with Gradle:
 
 ```bash
 
+# start infra and microservices
+docker compose up -d
+
+# make a simple product request and go to grafana http://localhost:3000 to see request logs and traces
+
+curl -X GET -u "customer:customer"  "http://localhost:8080/products" -v
+
+```
+
+## 🔧 Running microservices individually
+
+Execute cloud servers and microservices one by one with Gradle:
+
+```bash
+
 # tests
 ./gradlew test
 
@@ -65,12 +80,18 @@ Execute the project with Gradle:
 ./gradlew bootRun
 
 ```
+### List services
+- cart-ms
+- products-ms
+
+### Cloud servers
+- checkout-gateway
 
 ## 📌 BACKLOG
 - [x] feat: Implement API Gateway with Spring Cloud Gateway
 - [x] feat: Create Cart MicroService
 - [x] feat: Create Products MicroService
-- [ ] feat: Dockerize architecture
+- [x] feat: Dockerize architecture
 - [ ] feat: Service discovery
 - [ ] feat: Config Server
 - [ ] feat: Implement JWT authentication With Authorization Server

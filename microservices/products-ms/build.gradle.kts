@@ -7,6 +7,8 @@ plugins {
 group = "com.benjamin.ecommerce"
 version = "0.0.1-SNAPSHOT"
 
+extra["springCloudVersion"] = "2024.0.1"
+
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(21)
@@ -23,6 +25,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation("org.springframework.cloud:spring-cloud-starter-config")
 	implementation("org.springframework.boot:spring-boot-starter-aop")
 	implementation("org.postgresql:postgresql:42.7.5")
 	implementation("io.micrometer:micrometer-registry-otlp")
@@ -45,6 +48,12 @@ dependencies {
 	testCompileOnly("org.projectlombok:lombok:1.18.36")
 	testAnnotationProcessor("org.projectlombok:lombok:1.18.36")
 	testAnnotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
+}
+
+dependencyManagement {
+	imports {
+		mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+	}
 }
 
 tasks.withType<Test> {

@@ -1,1 +1,1 @@
-rootProject.name = "checkout"
+rootProject.name = "product-ms"
