@@ -10,20 +10,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class GatewayConfig {
 
-    @Value("${ecommerce.checkout.products.url}")
-    private String productServiceUrl;
-
-    @Value("${ecommerce.checkout.cart.url}")
-    private String cartServiceUrl;
-
     @Bean
     public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("product-service", r -> r.path("/products/**")
-                        .uri(productServiceUrl)
+                        .uri("lb://products-ms")
                 )
                 .route("cart-service", r -> r.path("/carts/**")
-                        .uri(cartServiceUrl)
+                        .uri("lb://cart-ms")
                 )
                 .build();
     }
