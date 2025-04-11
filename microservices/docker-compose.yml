@@ -116,8 +116,8 @@ services:
     volumes:
       - prometheus:/prometheus
       - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-    ports:
-      - "9090:9090"
+    # ports:
+    #   - "9090:9090"
     networks:
       - spring-cloud-microservice
 
@@ -146,9 +146,9 @@ services:
     volumes:
       - tempo:/tmp/tempo
       - ./docker/grafana/tempo.yml:/etc/tempo.yml:ro
-    ports:
-      - "3200:3200"    # tempo
-      - "4318:4318"  # otlp http
+    # ports:
+    #   - "3200:3200"    # tempo
+    #   - "4318:4318"  # otlp http
     networks:
       - spring-cloud-microservice
 
@@ -157,8 +157,8 @@ services:
     container_name: loki-service
     extra_hosts: ['host.docker.internal:host-gateway']
     command: ['-config.file=/etc/loki/local-config.yaml']
-    ports:
-      - "3100:3100"
+    # ports:
+    #   - "3100:3100"
     networks:
       - spring-cloud-microservice
 
