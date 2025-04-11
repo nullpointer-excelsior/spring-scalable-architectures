@@ -10,8 +10,8 @@ This code represents a microservices-based e-commerce application, specifically 
 - Services communicate via **REST APIs** and are orchestrated by an **API Gateway**.
 - Uses **Spring Boot** and **Spring Cloud Gateway** for service routing and request management.
 - Leverages a **Config Server** to manage centralized, externalized configuration for all microservices, ensuring consistent settings across environments.
+- Incorporates **Eureka Server** as a **Service Discovery** mechanism, allowing services to dynamically register and discover each other without hardcoded endpoints.
 - Integrates **Spring Security** at the **API Gateway** level to centralize authentication and authorization across all services (basic authentication is used for simplicity, as the focus is on the microservices architecture rather than advanced security mechanisms).
-
 
 
 ## 🌐 Core Components:
@@ -46,6 +46,11 @@ This code represents a microservices-based e-commerce application, specifically 
 - Enables consistent and environment-specific configuration management.
 - Supports dynamic configuration updates without requiring service redeployment.
 
+### 🧭 Service Discovery:
+- **Service Discovery** allows services to register themselves and discover other services dynamically at runtime.
+- **Eureka Client** in each microservice registers itself with the Eureka Server upon startup and periodically sends heartbeat signals to stay active in the registry.
+- Simplifies service communication by removing the need for hardcoded URLs, enabling resilient, fault-tolerant, and scalable service interactions.
+
 ## 🔗 Service Communication:
 - The **Gateway** is the contact point for clients.
 - To access product information, the client makes a request to the Gateway (`/products/**`), which then routes it to the **Products Microservice** (running on `http://localhost:8081`).
@@ -59,7 +64,7 @@ This code represents a microservices-based e-commerce application, specifically 
 - **Spring Cloud Config Server:** Centralized server for managing external configuration in a microservices architecture. Allows applications to retrieve configuration properties from a shared repository, making configuration management more efficient and consistent across environments.architecture.
 - **Spring Security:** Framework for authentication and authorization.
 - **Brave OTLP:** Library for instrumentation and export of distributed tracing using the OpenTelemetry Protocol (OTLP).
-
+- **Spring Cloud Netflix Eureka:** Implements **Service Discovery**, enabling microservices to dynamically register and discover each other at runtime. This eliminates the need for hardcoded endpoints, allowing for more flexible and scalable communication between services.
 
 
 
@@ -94,7 +99,6 @@ docker compose up -d
 ```
 
 
-
 ## 📊🔍 Observability Dashboard
 
 You can access the Grafana dashboard at [http://localhost:3000](http://localhost:3000) to monitor the application's observability data in real time. The system integrates the following tools:
@@ -117,13 +121,15 @@ This microservices-based application provides a scalable and maintainable struct
 
 - **checkout-gateway**: Serves as the API gateway, managing routing, load balancing, and security between clients and microservices.
 - **config-server**: Centralized configuration service powered by Spring Cloud Config Server, providing externalized configuration for all microservices.
+- **service-discovery**: Enables microservices to dynamically register and discover each other at runtime, facilitating seamless communication between services.
+
 
 ## 📌 BACKLOG
 - [x] feat: Implement API Gateway with Spring Cloud Gateway
 - [x] feat: Create Cart MicroService
 - [x] feat: Create Products MicroService
 - [x] feat: Dockerize architecture
-- [ ] feat: Service discovery
+- [x] feat: Service discovery
 - [x] feat: Config Server
 - [ ] feat: Implement JWT authentication With Authorization Server
 
