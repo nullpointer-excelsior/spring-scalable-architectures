@@ -85,6 +85,22 @@ services:
     networks:
       - spring-cloud-microservice
     
+  legacy-monolith:
+    image: openjdk:21-jdk-slim
+    container_name: legacy-monolith
+    depends_on:
+      postgres:
+        condition: service_healthy
+    entrypoint: ["java", "-jar", "/app/app.jar"]
+    environment:
+      - SPRING_CONFIG_LOCATION=/app/application.properties
+      - LOGGING_CONFIG=/app/logback-spring.xml
+      - SERVER_PORT=8181
+    volumes:
+      - ./docker/legacy-monolith:/app
+    networks:
+      - spring-cloud-microservice
+
   postgres:
     image: postgres:latest
     container_name: postgres-service
