@@ -28,5 +28,6 @@ RUN apt-get update && apt-get install -y curl
 # Copy the jar file from the build stage
 COPY --from=build /app/build/libs/*.jar app.jar
 
+
 # Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]

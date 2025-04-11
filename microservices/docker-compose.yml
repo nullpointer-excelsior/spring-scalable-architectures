@@ -2,6 +2,20 @@ version: '3.8'
 
 services:
 
+  service-discovery:
+    build:
+      context: ./service-discovery
+    container_name: service-discovery
+    ports:
+      - "8761:8761"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - spring-cloud-microservice
+
   checkout-gateway:
     build:
       context: ./gateway
@@ -12,6 +26,7 @@ services:
     ports:
       - "8080:8080"
     environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
       - CONFIG_SERVER_URL=http://config-server:8888
     networks:
       - spring-cloud-microservice
@@ -20,7 +35,11 @@ services:
     build:
       context: ./config-server
     container_name: config-server
+    depends_on:
+      service-discovery:
+        condition: service_healthy
     environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
       - SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCHLOCATIONS=file:/app/config
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
@@ -39,9 +58,12 @@ services:
     depends_on:
       config-server:
         condition: service_healthy
+      service-discovery:
+        condition: service_healthy
       postgres:
         condition: service_healthy
     environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
       - CONFIG_SERVER_URL=http://config-server:8888
     networks:
       - spring-cloud-microservice
@@ -53,11 +75,13 @@ services:
     depends_on:
       config-server:
         condition: service_healthy
+      service-discovery:
+        condition: service_healthy
       postgres:
         condition: service_healthy
     environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
       - CONFIG_SERVER_URL=http://config-server:8888
-      - SPRING_CONFIG_IMPORT=configserver:http://config-server:8888
     networks:
       - spring-cloud-microservice
     
@@ -81,7 +105,7 @@ services:
       - spring-cloud-microservice
       
   prometheus:
-    image: prom/prometheus:v2.54.1 # https://hub.docker.com/r/prom/prometheus
+    image: prom/prometheus:v2.54.1
     container_name: prometheus-service
     extra_hosts: ['host.docker.internal:host-gateway']
     command:
@@ -98,7 +122,7 @@ services:
       - spring-cloud-microservice
 
   grafana:
-    image: grafana/grafana:10.4.10 # https://hub.docker.com/r/grafana/grafana/tags
+    image: grafana/grafana:10.4.10
     container_name: grafana-service
     extra_hosts: ['host.docker.internal:host-gateway']
     environment:
@@ -115,7 +139,7 @@ services:
       - spring-cloud-microservice
 
   tempo:
-    image: grafana/tempo:2.4.2 # https://hub.docker.com/r/grafana/tempo/tags and https://github.com/grafana/tempo/releases
+    image: grafana/tempo:2.4.2
     container_name: tempo-service
     extra_hosts: ['host.docker.internal:host-gateway']
     command: ['-config.file=/etc/tempo.yml']
@@ -129,7 +153,7 @@ services:
       - spring-cloud-microservice
 
   loki:
-    image: grafana/loki:3.1.2 # https://hub.docker.com/r/grafana/loki/tags and https://github.com/grafana/loki/releases
+    image: grafana/loki:3.1.2
     container_name: loki-service
     extra_hosts: ['host.docker.internal:host-gateway']
     command: ['-config.file=/etc/loki/local-config.yaml']
