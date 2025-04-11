@@ -5,9 +5,9 @@ This repository contains various architectural styles to create highly scalable,
 ## 🖥️ [Frontend Client](checkout-frontend/README.md)
 To test the different architectures, you can run the **checkout-frontend** application, which interacts with the backend service you wish to try. 🚀
 
-## 🏛️ [Monolith](monolith/README.md)
+## 🏛️ [Modular Monolith](monolith/README.md)
 
-In this architectural style, all components are developed within the same application. This results in a single deployable unit, which simplifies development and deployment but may present challenges in scalability and maintainability as the application grows.
+In this architectural style, all components are developed within the same application. This results in a single deployable unit, which simplifies development and deployment but may present challenges in scalability and maintainability as the application grows. Due to this limitation, we can implement some architectural patterns to achieve a modular and scalable approach.
 
 ## 🔗 [Microservices](microservices/README.md)
 

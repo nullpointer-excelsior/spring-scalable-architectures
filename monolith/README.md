@@ -1,4 +1,4 @@
-# 🏛️ Monolith
+# 🏛️ Modular Monolith
 
 This code represents a monolithic e-commerce application, specifically designed to be **scalable** and **maintainable** through well-defined **modules** and **event-driven communication**. The system follows a structured approach to separate concerns while maintaining a unified deployment. Below is a breakdown of its major components:
 
