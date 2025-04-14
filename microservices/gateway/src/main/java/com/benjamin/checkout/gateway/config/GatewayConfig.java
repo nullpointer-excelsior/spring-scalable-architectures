@@ -1,5 +1,6 @@
 package com.benjamin.checkout.gateway.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +9,9 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class GatewayConfig {
+
+    @Value("${legacy.url}")
+    private String legacyUrl;
 
     @Bean
     public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
@@ -29,7 +33,7 @@ public class GatewayConfig {
                                         .setFallbackUri("forward:/fallback/unavailable")
                                         .addStatusCode("INTERNAL_SERVER_ERROR"))
                         )
-                        .uri("http://localhost:8181"))
+                        .uri(legacyUrl))
                 .build();
     }
 
