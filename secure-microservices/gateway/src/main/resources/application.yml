@@ -1,0 +1,18 @@
+spring:
+  profiles:
+    active: default
+  application:
+    name: checkout-gateway
+  config:
+    import: optional:configserver:${CONFIG_SERVER_URL:http://localhost:8888}
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config-server
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/
+legacy:
+  url: http://localhost:8181
