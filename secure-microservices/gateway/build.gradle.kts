@@ -33,6 +33,8 @@ dependencies {
 	implementation("io.micrometer:micrometer-registry-otlp")
 	implementation("io.micrometer:micrometer-tracing-bridge-brave")
 	implementation("io.zipkin.contrib.otel:encoder-brave:0.1.0")
+	compileOnly("org.projectlombok:lombok:1.18.36")
+	annotationProcessor("org.projectlombok:lombok:1.18.36")
 	runtimeOnly("com.github.loki4j:loki-logback-appender:1.5.2")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")

@@ -63,7 +63,11 @@ logging:
 services:
   products-ms:
     url: http://localhost:8081
-  cart-ms:
+    user: products
+    pass: products
+  carts-ms:
     url: http://localhost:8082
+    user: carts
+    pass: carts
   legacy:
     url: http://localhost:8181

@@ -2,7 +2,6 @@ package com.benjamin.checkout.gateway.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
@@ -35,13 +34,11 @@ public class SecurityConfig {
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         return http.authorizeExchange(authorize ->
                         authorize.pathMatchers("/login*", "/").permitAll()
-                                //.pathMatchers(HttpMethod.GET, "/products").hasAuthority("SCOPE_products.read")//.permitAll()
-                                .pathMatchers(HttpMethod.GET, "/products").permitAll()
+                                .pathMatchers("/products").permitAll()
                                 .pathMatchers("/products/quantity").authenticated()
                                 .pathMatchers("/carts/**").hasAuthority("SCOPE_carts.read")
                                 .anyExchange()
-                                .authenticated()
-                )
+                                .authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))
                 .build();
     }

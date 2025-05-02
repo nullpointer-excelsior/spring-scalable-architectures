@@ -13,9 +13,9 @@ spring:
     oauth2:
       authorizationserver:
         client:
-          products-client:
+          checkout-client:
             registration:
-              client-id: "products-client"
+              client-id: "checkout-client"
               client-secret: "{noop}secret"
               client-authentication-methods:
                 - "client_secret_basic"
@@ -24,11 +24,14 @@ spring:
                 - "refresh_token"
                 - "client_credentials"
               redirect-uris:
-                - "http://127.0.0.1:8080/login/oauth2/code/products-client"
+                - "http://127.0.0.1:8080/login/oauth2/code/checkout-client"
               post-logout-redirect-uris:
                 - "http://127.0.0.1:8080/"
               scopes:
                 - "openid"
                 - "profile"
                 - "products.read"
+                - "products.write"
+                - "carts.read"
+                - "carts.write"
             require-authorization-consent: true
