@@ -39,7 +39,7 @@ spring:
               scopes:
                 - "config.read"
                 - "config.write"
-
+              
   resourceserver:
     jwt:
       issuer-uri: http://localhost:9000
