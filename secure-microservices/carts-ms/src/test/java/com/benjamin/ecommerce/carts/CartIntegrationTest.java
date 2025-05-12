@@ -7,6 +7,7 @@ import com.benjamin.ecommerce.carts.entities.CartUserEntity;
 import com.benjamin.ecommerce.carts.repositories.CartProductRepository;
 import com.benjamin.ecommerce.carts.repositories.CartRepository;
 import com.benjamin.ecommerce.carts.repositories.CartUserRepository;
+import com.benjamin.ecommerce.config.TestSecurityConfig;
 import com.benjamin.ecommerce.shared.TestUtils;
 import com.benjamin.ecommerce.carts.dto.CreateCartRequest;
 import com.benjamin.ecommerce.carts.dto.UpdateProductsRequest;
@@ -23,6 +24,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -39,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes = CheckoutApplication.class)
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 public class CartIntegrationTest {
 
     @Autowired
