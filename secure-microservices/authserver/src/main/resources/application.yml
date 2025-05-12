@@ -12,13 +12,7 @@ spring:
               client-authentication-methods:
                 - "client_secret_basic"
               authorization-grant-types:
-                - "authorization_code"
-                - "refresh_token"
                 - "client_credentials"
-              redirect-uris:
-                - "http://127.0.0.1:8080/login/oauth2/code/checkout-client"
-              post-logout-redirect-uris:
-                - "http://127.0.0.1:8080/"
               scopes:
                 - "openid"
                 - "profile"
@@ -27,19 +21,3 @@ spring:
                 - "carts.read"
                 - "carts.write"
             require-authorization-consent: true
-
-          config-client:
-            registration:
-              client-id: "config-client"
-              client-secret: "{noop}config-server-secret"
-              client-authentication-methods:
-                - "client_secret_basic"
-              authorization-grant-types:
-                - "client_credentials"
-              scopes:
-                - "config.read"
-                - "config.write"
-              
-  resourceserver:
-    jwt:
-      issuer-uri: http://localhost:9000
