@@ -22,7 +22,7 @@ public class GatewayConfig {
                         .uri("lb://products-ms")
                 )
                 .route("cart-service", r -> r.path("/carts/**")
-                        .filters(f -> f.circuitBreaker(c -> c.setName("legacy-circuit-breaker")
+                        .filters(f -> f.circuitBreaker(c -> c.setName("carts-circuit-breaker")
                                 .setFallbackUri("forward:/fallback/unavailable")
                                 .addStatusCode("INTERNAL_SERVER_ERROR")))
                         .uri("lb://cart-ms")
