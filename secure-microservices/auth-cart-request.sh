@@ -1,8 +1,8 @@
 #!/bin/bash
 
 
-TOKEN=$(curl -u checkout-client:secret \
-  -X POST http://localhost:9000/oauth2/token \
+TOKEN=$(curl -u checkout-client:secretX \
+  -X POST http://auth-server:9000/oauth2/token \
   -H "Content-Type: application/x-www-form-urlencoded" \
   -d "grant_type=client_credentials&scope=carts.read" | jq '.access_token' | tr -d '"')
 

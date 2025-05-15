@@ -6,13 +6,28 @@ services:
     build:
       context: ./service-discovery
     container_name: service-discovery
+    environment:
+      - CONFIG_SERVER_URL=http://config-server:8888
     ports:
       - "8761:8761"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
-      interval: 5s
+      interval: 10s
       timeout: 3s
-      retries: 5
+      retries: 10
+    networks:
+      - spring-cloud-microservice
+
+  auth-server:
+    build:
+      context: ./authserver
+    container_name: auth-server
+    ports:
+      - "9000:9000"
+    environment:
+      - SPRING_CONFIG_LOCATION=file:/app/application.yml
+    volumes:
+      - ./docker/authserver/application.yml:/app/application.yml
     networks:
       - spring-cloud-microservice
 
@@ -20,13 +35,9 @@ services:
     build:
       context: ./gateway
     container_name: checkout-gateway
-    depends_on:
-      config-server:
-        condition: service_healthy
     ports:
       - "8080:8080"
     environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
       - CONFIG_SERVER_URL=http://config-server:8888
     networks:
       - spring-cloud-microservice
@@ -35,11 +46,7 @@ services:
     build:
       context: ./config-server
     container_name: config-server
-    depends_on:
-      service-discovery:
-        condition: service_healthy
     environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
       - SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCHLOCATIONS=file:/app/config
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
@@ -51,19 +58,16 @@ services:
     networks:
       - spring-cloud-microservice
   
-  cart-ms:
+  carts-ms:
     build:
-      context: ./cart-ms
-    container_name: cart-ms
+      context: ./carts-ms
+    container_name: carts-ms
     depends_on:
-      config-server:
-        condition: service_healthy
       service-discovery:
         condition: service_healthy
       postgres:
         condition: service_healthy
     environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
       - CONFIG_SERVER_URL=http://config-server:8888
     networks:
       - spring-cloud-microservice
@@ -73,34 +77,15 @@ services:
       context: ./products-ms
     container_name: products-ms
     depends_on:
-      config-server:
-        condition: service_healthy
       service-discovery:
         condition: service_healthy
       postgres:
         condition: service_healthy
     environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
       - CONFIG_SERVER_URL=http://config-server:8888
     networks:
       - spring-cloud-microservice
     
-  legacy-monolith:
-    image: openjdk:21-jdk-slim
-    container_name: legacy-monolith
-    depends_on:
-      postgres:
-        condition: service_healthy
-    entrypoint: ["java", "-jar", "/app/app.jar"]
-    environment:
-      - SPRING_CONFIG_LOCATION=/app/application.properties
-      - LOGGING_CONFIG=/app/logback-spring.xml
-      - SERVER_PORT=8181
-    volumes:
-      - ./docker/legacy-monolith:/app
-    networks:
-      - spring-cloud-microservice
-
   postgres:
     image: postgres:latest
     container_name: postgres-service
@@ -120,69 +105,6 @@ services:
     networks:
       - spring-cloud-microservice
       
-  prometheus:
-    image: prom/prometheus:v2.54.1
-    container_name: prometheus-service
-    extra_hosts: ['host.docker.internal:host-gateway']
-    command:
-      - --enable-feature=exemplar-storage
-      - --enable-feature=otlp-write-receiver
-      - --web.enable-remote-write-receiver
-      - --config.file=/etc/prometheus/prometheus.yml
-    volumes:
-      - prometheus:/prometheus
-      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-    # ports:
-    #   - "9090:9090"
-    networks:
-      - spring-cloud-microservice
-
-  grafana:
-    image: grafana/grafana:10.4.10
-    container_name: grafana-service
-    extra_hosts: ['host.docker.internal:host-gateway']
-    environment:
-      - GF_AUTH_ANONYMOUS_ENABLED=true
-      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
-      - GF_AUTH_DISABLE_LOGIN_FORM=true
-    volumes:
-      - ./docker/grafana/grafana.ini:/etc/grafana/grafana.ini:ro
-      - ./docker/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
-      - ./docker/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
-    ports:
-      - "3000:3000"
-    networks:
-      - spring-cloud-microservice
-
-  tempo:
-    image: grafana/tempo:2.4.2
-    container_name: tempo-service
-    extra_hosts: ['host.docker.internal:host-gateway']
-    command: ['-config.file=/etc/tempo.yml']
-    volumes:
-      - tempo:/tmp/tempo
-      - ./docker/grafana/tempo.yml:/etc/tempo.yml:ro
-    # ports:
-    #   - "3200:3200"    # tempo
-    #   - "4318:4318"  # otlp http
-    networks:
-      - spring-cloud-microservice
-
-  loki:
-    image: grafana/loki:3.1.2
-    container_name: loki-service
-    extra_hosts: ['host.docker.internal:host-gateway']
-    command: ['-config.file=/etc/loki/local-config.yaml']
-    # ports:
-    #   - "3100:3100"
-    networks:
-      - spring-cloud-microservice
-
-volumes:
-  prometheus:
-    driver: local
-  tempo:
-    driver: local
 networks:
   spring-cloud-microservice:
     driver: bridge

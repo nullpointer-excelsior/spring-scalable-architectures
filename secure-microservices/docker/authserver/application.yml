@@ -1,0 +1,27 @@
+server:
+  port: 9000
+spring:
+  security:
+    oauth2:
+      authorizationserver:
+        client:
+          checkout-client:
+            registration:
+              client-id: "checkout-client"
+              client-secret: "{noop}secret"
+              client-authentication-methods:
+                - "client_secret_basic"
+              authorization-grant-types:
+                - "client_credentials"
+              scopes:
+                - "openid"
+                - "profile"
+                - "products.read"
+                - "products.write"
+                - "carts.read"
+                - "carts.write"
+            require-authorization-consent: true
+      resourceserver:
+        jwt:
+          issuer-uri: http://auth-server:9000
+
