@@ -6,6 +6,9 @@ services:
     build:
       context: ./service-discovery
     container_name: service-discovery
+    depends_on:
+      config-server:
+        condition: service_healthy
     ports:
       - "8761:8761"
     healthcheck:
@@ -35,9 +38,7 @@ services:
     build:
       context: ./config-server
     container_name: config-server
-    depends_on:
-      service-discovery:
-        condition: service_healthy
+
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka
       - SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCHLOCATIONS=file:/app/config
