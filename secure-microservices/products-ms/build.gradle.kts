@@ -28,13 +28,9 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
   	implementation("org.springframework.cloud:spring-cloud-starter-config")
-	implementation("org.springframework.boot:spring-boot-starter-aop")
+	implementation("org.springframework.retry:spring-retry")
 	implementation("org.postgresql:postgresql:42.7.5")
-	implementation("io.micrometer:micrometer-registry-otlp")
-	implementation("io.micrometer:micrometer-tracing-bridge-brave")
-	implementation("io.zipkin.contrib.otel:encoder-brave:0.1.0")
 	
-	runtimeOnly("com.github.loki4j:loki-logback-appender:1.5.2")
 	runtimeOnly("com.h2database:h2")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")

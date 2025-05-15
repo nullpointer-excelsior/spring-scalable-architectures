@@ -7,7 +7,6 @@ import com.benjamin.ecommerce.carts.entities.CartUserEntity;
 import com.benjamin.ecommerce.carts.repositories.CartProductRepository;
 import com.benjamin.ecommerce.carts.repositories.CartRepository;
 import com.benjamin.ecommerce.carts.repositories.CartUserRepository;
-import com.benjamin.ecommerce.config.TestSecurityConfig;
 import com.benjamin.ecommerce.shared.TestUtils;
 import com.benjamin.ecommerce.carts.dto.CreateCartRequest;
 import com.benjamin.ecommerce.carts.dto.UpdateProductsRequest;
