@@ -1,105 +1,57 @@
 # 🔗 Secure Microservices
 
-This code represents a microservices-based e-commerce application, specifically focusing on the **Cart** and **Products** modules, along with an **API Gateway** for managing requests. Each module operates as an independent service, communicating via REST APIs.
+Secure patterns for microservices and standalone apps with spring security
 
-## 📂 General Structure:
 
-### 🔹 Microservices Architecture:
-- The application is divided into independent services: **Cart Service** and **Products Service**.
-- Each service has its own database and is responsible for a specific domain.
-- Services communicate via **REST APIs** and are orchestrated by an **API Gateway**.
-- Uses **Spring Boot** and **Spring Cloud Gateway** for service routing and request management.
-- Leverages a **Config Server** to manage centralized, externalized configuration for all microservices, ensuring consistent settings across environments.
-- Incorporates **Eureka Server** as a **Service Discovery** mechanism, allowing services to dynamically register and discover each other without hardcoded endpoints.
-- Integrates **Spring Security** at the **API Gateway** level to centralize authentication and authorization across all services (basic authentication is used for simplicity, as the focus is on the microservices architecture rather than advanced security mechanisms).
+## 📌 Architecture Summary
+
+This microservices-based application provides a scalable and maintainable structure for **Cart** and **Products** management. It utilizes **Spring Boot** for microservice implementation and **Spring Cloud Gateway** for API management. The architecture also incorporates **Spring Cloud Config Server** for centralized external configuration management, ensuring consistency and ease of configuration updates across all microservices. **Security is managed using Spring Security, applying different available approaches.**
+
+### 🧩 Microservices
+
+- **cart-ms**: Handles all operations related to the shopping cart, including adding, updating, and removing items.
+- **products-ms**: Manages product information such as details, availability, and pricing.
+
+### ☁️ Cloud Infrastructure Services
+
+- **checkout-gateway**: Serves as the API gateway, managing routing, load balancing, and security between clients and microservices.
+- **config-server**: Centralized configuration service powered by Spring Cloud Config Server, providing externalized configuration for all microservices.
+- **service-discovery**: Enables microservices to dynamically register and discover each other at runtime, facilitating seamless communication between services.
+- **auth-server**: Manages authentication and authorization, issuing and validating access tokens to secure service-to-service and client-to-service communications.
+
+### 🔹 Architecture:
+- The application is divided into independent services: **Cart Service** and **Products Service**.  
+- Each service has its own database and is responsible for a specific domain.  
+- Services communicate via **REST APIs** and are orchestrated by an **API Gateway**.  
+- Uses **Spring Boot** and **Spring Cloud Gateway** for service routing and request management.  
+- The **API Gateway** acts as a **resource-server**, enforcing authentication and authorization via tokens issued by the **Auth Server**; it groups and protects access to **Cart Service** and **Products Service**.  
+- Access to the **Config Server**, **Eureka Server**, and microservices is secured using **Basic Authentication**.  
+- Leverages a **Config Server** to manage centralized, externalized configuration for all microservices, ensuring consistent settings across environments.  
+- Incorporates **Eureka Server** as a **Service Discovery** mechanism, allowing services to dynamically register and discover each other without hardcoded endpoints.  
+- Integrates an **Auth Server** to manage authentication and authorization, issuing tokens used by the gateway for access control.  
 - **Resilience**: Implements the **Circuit Breaker** pattern using **Resilience4j** tool to improve fault tolerance. If a service becomes unavailable or unresponsive, the circuit breaker prevents further calls to it for a period of time, allowing the system to degrade gracefully and recover more effectively.
 
-## 🌐 Core Components:
 
-### 🛒 Cart Service:
-- Manages shopping carts for users.
-- Supports cart creation, updates, and retrieval.
-- Uses **CartEntity, CartProductEntity, CartUserEntity** for persistence.
-- Mappers (**CartMapper, CartProductMapper, CartUserMapper**) convert between entities and models.
-- REST Controller (**CartRestController**) exposes cart-related endpoints.
-- Service (**CartService**) contains business logic.
-- Stores data in its own **Cart Database**.
+## 🔏 Security strategies
 
-### 🏬 Products Service:
-- Manages product information and inventory.
-- Updates stock quantities after purchases.
-- Uses **ProductEntity** for persistence.
-- REST Controller (**ProductRestController**) exposes product-related endpoints.
-- Service (**ProductService**) contains business logic.
-- Stores data in its own **Products Database**.
+### Auth Basic
+Basic authentication is used for internal service communication and access to infrastructure components like Config Server and Eureka. It relies on username and password sent in each HTTP request encoded in Base64.
 
-### 🚀 API Gateway:
-- Serves as a single entry point for all client requests.
-- Routes requests to the appropriate microservices.
-- Provides security, rate limiting, and logging features.
-- Uses **Spring Cloud Gateway** for dynamic routing and load balancing.
-- Defines routes for **Cart** and **Products** services.
+### Oauth2
+OAuth2 is used for client authorization, issuing JWT access tokens that encapsulate user identity and permissions. These tokens are signed and verified by the Auth Server and used by the Resource Server to grant or deny access.
 
-### ⚙️ Config Server:
-- Centralized configuration service using **Spring Cloud Config Server**.
-- Manages external properties for all microservices from a shared Git repository or local file system.
-- Enables consistent and environment-specific configuration management.
-- Supports dynamic configuration updates without requiring service redeployment.
+### Spring Security Integration
+Security is implemented using **Spring Security**, which enables the use of multiple security mechanisms such as OAuth2, JWT, and Basic Auth. This flexible approach ensures appropriate protection for each part of the system.
 
-### 🧭 Service Discovery:
-- **Service Discovery** allows services to register themselves and discover other services dynamically at runtime.
-- **Eureka Client** in each microservice registers itself with the Eureka Server upon startup and periodically sends heartbeat signals to stay active in the registry.
-- Simplifies service communication by removing the need for hardcoded URLs, enabling resilient, fault-tolerant, and scalable service interactions.
+## 🔧 Running project examples
 
-### 🏛️ Legacy Service:
-- In some scenarios, fully migrating away from a monolithic architecture isn't feasible due to time, risk, or cost constraints.
-- The **legacy-monolith** acts as a centralized system that retains functionalities equivalent to those in the microservices (e.g., product management, cart operations).
-- It serves as a **fallback mechanism** during service outages, ensuring continuity of service and improved resilience.
-- While the long-term goal may be to decompose the monolith, its presence provides stability and acts as a bridge during the transition to a fully distributed system.
+You need to add the following line `127.0.0.1 auth-server` into your `/etc/hosts` file:
 
-## 🔗 Service Communication:
-
-- The **Gateway** is the contact point for clients.
-- To access product information, the client makes a request to the Gateway (`/products/**`), which then routes it to the **Products Microservice** (running on `http://localhost:8081`).
-- To interact with shopping carts, the client makes a request to the Gateway (`/carts/**`), which then routes it to the **Cart Microservice** (running on `http://localhost:8082`).
-- The **Products** and **Cart** microservices are independent of each other in this shown architecture. No direct communication between them is observed in the provided files.
-
-## 📊🔍 Observability
-
-Observability is a critical aspect of microservices architecture, as it enables teams to detect, understand, and resolve issues quickly in highly distributed systems. In a microservices environment, failures can occur in isolated services or as part of complex inter-service communication. Without proper observability, diagnosing such issues becomes challenging and time-consuming.
-
-When the microservice stack is Up you can access the Grafana dashboard at [http://localhost:3000](http://localhost:3000) to monitor the application's observability data in real time. The system integrates the following tools:
-
-- **Prometheus** for collecting and querying metrics.
-- **Loki** for centralized logging and log aggregation.
-- **Tempo** for distributed tracing and visualization of request flows across microservices.
-
-These tools work together to provide a comprehensive view of the system's performance, logs, and traces, all accessible through a unified Grafana interface.
-
-## 👨‍🚒 High Availability
-
-In microservices architecture, **high availability** is crucial to ensure that systems remain operational and responsive even when individual components fail. A resilient system can gracefully handle service outages, minimize downtime, and provide fallback mechanisms to preserve user experience and business continuity.
-
-### 🚦 Circuit Breaker Strategy
-
-To ensure high availability and graceful degradation under failure conditions, a multi-layered **Circuit Breaker** strategy is implemented using **Resilience4j** at the API Gateway level:
-
-- If the `products-ms` service becomes unresponsive or fails, the circuit breaker redirects all traffic to the **legacy-monolith** as a fallback (`/legacy/products`).
-- If the **legacy-monolith** also fails or becomes overloaded, a secondary circuit breaker responds with a predefined fallback route (`/fallback/unavailable`) and returns a structured error message: "Checkout Service temporarily unavailable. Please try again later."
-
-This approach ensures the system degrades gracefully, maintains user experience as much as possible, and avoids cascading failures across the microservices ecosystem.
-
-## 🛠️ Key Technologies
-
-- **Spring Boot:** Base framework for building Java applications quickly.
-- **Spring Cloud Gateway:** Provides API routing and security for the microservices 
-- **Spring Cloud Config Server:** Centralized server for managing external configuration in a microservices architecture. Allows applications to retrieve configuration properties from a shared repository, making configuration management more efficient and consistent across environments.architecture.
-- **Spring Security:** Framework for authentication and authorization.
-- **Brave OTLP:** Library for instrumentation and export of distributed tracing using the OpenTelemetry Protocol (OTLP).
-- **Spring Cloud Netflix Eureka:** Implements **Service Discovery**, enabling microservices to dynamically register and discover each other at runtime. This eliminates the need for hardcoded endpoints, allowing for more flexible and scalable communication between services.
-- **Circuit Breaker (Resilience4j):** Enhances fault tolerance by preventing repeated calls to failing services. When a service becomes unavailable or slow, the circuit breaker trips and initially redirects traffic to the **legacy-monolith** service as a fallback. If the issue persists, it then temporarily blocks all requests to the failing service, allowing the system to maintain stability and recover gracefully.
-
-## 🔧 Running the Project
+**/etc/hosts**
+```txt
+# for local spring-authserver POC
+127.0.0.1 auth-server
+```
 
 Execute the project with Gradle:
 
@@ -126,31 +78,101 @@ docker compose up -d
 
 # Make a GET request to the API Gateway to gain access to the microservices.
  curl -X GET -u "customer:customer"  "http://localhost:8080/products" -v
-
 ```
 
-## 📌 Summary
-This microservices-based application provides a scalable and maintainable structure for **Cart** and **Products** management. It utilizes **Spring Boot** for microservice implementation and **Spring Cloud Gateway** for API management. The architecture also incorporates **Spring Cloud Config Server** for centralized external configuration management, ensuring consistency and ease of configuration updates across all microservices.
 
-### 🧩 Microservices
+## 1. 🔐 Basic Authentication
 
-- **cart-ms**: Handles all operations related to the shopping cart, including adding, updating, and removing items.
-- **products-ms**: Manages product information such as details, availability, and pricing.
+**Basic Authentication** is a simple authentication scheme built into the HTTP protocol. It works by sending the user's credentials — a username and password — encoded in Base64 within an HTTP header called Authorization. When a client makes a request to a server, it includes this header so the server can verify the user's identity. In this example is used for securing internal microservices and infrastructure components such as the Config Server, Eureka Server, and individual microservices.
 
-### ☁️ Cloud Infrastructure Services
+--- 
 
-- **checkout-gateway**: Serves as the API gateway, managing routing, load balancing, and security between clients and microservices.
-- **config-server**: Centralized configuration service powered by Spring Cloud Config Server, providing externalized configuration for all microservices.
-- **service-discovery**: Enables microservices to dynamically register and discover each other at runtime, facilitating seamless communication between services.
+### 🧪 Implementation Examples
 
+- [**Basic Auth Server**](docs/basic/server-client.md): Learn how to configure a Spring Boot server secured with Basic Authentication using Spring Security.
 
-## 📌 BACKLOG
-- [x] feat: Implement API Gateway with Spring Cloud Gateway
-- [x] feat: Create Cart MicroService
-- [x] feat: Create Products MicroService
-- [x] feat: Dockerize architecture
-- [x] feat: Service discovery
-- [x] feat: Config Server
-- [ ] feat: Implement JWT authentication With Authorization Server
+- [**Using Basic Auth in a GatewayFilter**](docs/basic/gateway-filter.md): A `GatewayFilter` is a special component in Spring Cloud Gateway used to intercept and manipulate HTTP requests before forwarding them to internal microservices. This example shows how to inject Basic Authentication headers into outgoing requests to enable secure communication between the gateway and downstream services.
 
+---
 
+## 2. 🔐 OAuth2
+
+OAuth2 is an open standard authorization framework that enables applications to obtain limited access to user resources on a server, without exposing user credentials. It allows users to grant third-party applications permission to access their resources securely and selectively.
+
+### ⚙️ Main Components of OAuth2
+
+- **Resource Owner**  
+  The user or entity who owns the protected resources and can grant access to them.
+
+- **Client**  
+  The application requesting access to the resources on behalf of the Resource Owner. It must be authorized by the Resource Owner.
+
+- **Authorization Server**  
+  The server responsible for authenticating the Resource Owner and issuing access tokens to the Client after successful authorization.
+
+- **Resource Server**  
+  The server hosting the protected resources. It validates access tokens and serves requests authorized by the Client.
+
+### 🔄 OAuth2 Flow Overview
+
+1. The Client requests authorization from the Resource Owner.  
+2. The Resource Owner grants authorization to the Client.  
+3. The Client obtains an access token from the Authorization Server.  
+4. The Client uses the access token to access protected resources from the Resource Server.  
+
+## 📘 Key Concepts in OAuth2
+
+OAuth2 introduces several important concepts that define how authorization is handled and controlled.
+
+### 🎯 Scopes
+
+Scopes specify what access levels the client is requesting. They define the *boundaries of access* granted by the access token.  
+Examples:
+- `read:products` – allows reading product data
+- `write:carts` – allows writing to the cart service
+
+Scopes allow fine-grained permission control and can be accepted or denied by the Resource Owner.
+
+---
+
+### 🔑 Grant Types
+
+Grant types define how a client can obtain an access token. Each use case (web app, backend service, mobile app) uses a different grant type:
+
+- **Authorization Code**: Secure flow for apps with a backend server. Requires user login and redirection.
+- **Implicit**: Simplified flow for browser apps (now discouraged for security reasons).
+- **Resource Owner Password Credentials**: The user provides their username and password directly to the client (not recommended).
+- **Client Credentials**: Used in service-to-service (machine-to-machine) scenarios without user involvement.
+- **Refresh Token**: Allows obtaining new tokens without re-authenticating the user.
+
+---
+
+### 🪙 Access Tokens
+
+Access tokens are short-lived credentials issued by the Authorization Server. They are typically formatted as **JWTs (JSON Web Tokens)**, containing:
+- User identity
+- Granted scopes
+- Expiration time
+- Issuer information
+
+The **Resource Server** uses these tokens to validate and authorize incoming requests.
+
+---
+
+### 🧪 Implementation Examples
+
+- [**Client Credentials**](docs/oauth/client-credentials.md): Learn how to secure a Resource Server using the OAuth2 `client_credentials` grant type, enabling secure service-to-service authentication without user interaction.
+
+--- 
+
+## Backlog
+
+- [x] Basic auth
+- [x] Auth server implementation
+- [x] Oauth2 OpenIdConnect 
+- [x] Oauth2 JWT client_credentials access
+- [ ] Oauth2 web client strategies
+- [ ] mTLS strategies
+- [ ] ConfigServer Hardening
+- [ ] Common attacks
+- [ ] Linux Hardening
