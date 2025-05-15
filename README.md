@@ -13,6 +13,12 @@ In this architectural style, all components are developed within the same applic
 
 In this architectural style, the application is decomposed into multiple independently deployable services. Each microservice is responsible for a specific business capability and communicates with other services via APIs. This approach enhances scalability, maintainability, and flexibility but introduces challenges in inter-service communication, data consistency, and deployment complexity.
 
+
+## 🔐 [Secure Microservices](secure-microservices/README.md)
+
+This section focuses on securing microservices using different strategies such as Basic Authentication, OAuth2, and JWT. It explains how to protect service-to-service communication, secure endpoints through Spring Security, and implement common security patterns in distributed architectures.
+
+
 ## 🔧 Running the Project
 
 1. **Start Docker Compose:**
