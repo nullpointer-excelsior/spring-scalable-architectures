@@ -45,11 +45,13 @@ This code represents a microservices-based e-commerce application, specifically 
 - Manages external properties for all microservices from a shared Git repository or local file system.
 - Enables consistent and environment-specific configuration management.
 - Supports dynamic configuration updates without requiring service redeployment.
+- The **Config Server** is deployed behind an **NGINX-based load balancer** to ensure high availability and distribute configuration requests efficiently across multiple instances.
 
 ### 🧭 Service Discovery:
 - **Service Discovery** allows services to register themselves and discover other services dynamically at runtime.
 - **Eureka Client** in each microservice registers itself with the Eureka Server upon startup and periodically sends heartbeat signals to stay active in the registry.
 - Simplifies service communication by removing the need for hardcoded URLs, enabling resilient, fault-tolerant, and scalable service interactions.
+
 
 ### 🏛️ Legacy Service:
 - In some scenarios, fully migrating away from a monolithic architecture isn't feasible due to time, risk, or cost constraints.
@@ -80,7 +82,20 @@ These tools work together to provide a comprehensive view of the system's perfor
 
 In microservices architecture, **high availability** is crucial to ensure that systems remain operational and responsive even when individual components fail. A resilient system can gracefully handle service outages, minimize downtime, and provide fallback mechanisms to preserve user experience and business continuity.
 
-### 🚦 Circuit Breaker Strategy
+### ⚙️ Config Server
+
+The **Config Server** is essential because all microservices depend on it to retrieve their configuration, so it must be deployed with **high availability** to avoid service disruptions.
+
+#### Load Balancer
+
+The **Config Server** is deployed with **two active instances** to ensure redundancy and fault tolerance. These instances are fronted by a **server-side load balancer implemented with NGINX**, which distributes incoming configuration requests evenly across the available instances. This strategy ensures continuous availability of configuration services and prevents single points of failure during runtime or deployment scenarios.
+
+### 🚪 Gateway
+
+The **API Gateway** is a crucial component in the microservices architecture, acting as the **single entry point** for all external client requests. Given its central role, it's essential to ensure this component remains **highly available** and **resilient**, as any failure at this level could disrupt access to the entire system.
+
+
+#### 🚦 Circuit Breaker
 
 To ensure high availability and graceful degradation under failure conditions, a multi-layered **Circuit Breaker** strategy is implemented using **Resilience4j** at the API Gateway level:
 
@@ -89,14 +104,26 @@ To ensure high availability and graceful degradation under failure conditions, a
 
 This approach ensures the system degrades gracefully, maintains user experience as much as possible, and avoids cascading failures across the microservices ecosystem.
 
+#### ⚖️ Load Balancer
+
+The API Gateway uses a **load balancer** configuration to distribute requests across multiple instances of the microservices. Routes are defined with **Resilience4j circuit breakers** for fault tolerance:
+
+- Requests to `/products/**` are load balanced to `products-ms` instances (`lb://products-ms`) with a circuit breaker that falls back to the legacy service (`/legacy/products`) if the product service fails.
+- Requests to `/carts/**` are routed to `cart-ms` instances (`lb://cart-ms`) with a circuit breaker that falls back to a predefined error response (`/fallback/unavailable`) on failure.
+- Requests to `/legacy/products/**` route to the legacy service with path rewriting and its own circuit breaker with fallback.
+
+This setup ensures balanced load distribution and graceful degradation across services, maintaining availability and system stability.
+
+
 ## 🛠️ Key Technologies
 
 - **Spring Boot:** Base framework for building Java applications quickly.
 - **Spring Cloud Gateway:** Provides API routing and security for the microservices 
 - **Spring Cloud Config Server:** Centralized server for managing external configuration in a microservices architecture. Allows applications to retrieve configuration properties from a shared repository, making configuration management more efficient and consistent across environments.architecture.
+- **NGINX:** Used as a server-side load balancer to distribute traffic evenly across multiple instances of the **Config Server**, ensuring its high availability and fault tolerance.  
 - **Spring Security:** Framework for authentication and authorization.
 - **Brave OTLP:** Library for instrumentation and export of distributed tracing using the OpenTelemetry Protocol (OTLP).
-- **Spring Cloud Netflix Eureka:** Implements **Service Discovery**, enabling microservices to dynamically register and discover each other at runtime. This eliminates the need for hardcoded endpoints, allowing for more flexible and scalable communication between services.
+- **Spring Cloud Netflix Eureka:** Implements **Service Discovery** and also provides **client-side load balancing**, enabling microservices to dynamically register, discover each other at runtime, and distribute requests efficiently without hardcoded endpoints.  
 - **Circuit Breaker (Resilience4j):** Enhances fault tolerance by preventing repeated calls to failing services. When a service becomes unavailable or slow, the circuit breaker trips and initially redirects traffic to the **legacy-monolith** service as a fallback. If the issue persists, it then temporarily blocks all requests to the failing service, allowing the system to maintain stability and recover gracefully.
 
 ## 🔧 Running the Project
@@ -108,6 +135,9 @@ Execute the project with Gradle:
 Execute cloud servers and microservices one by one with Gradle:
 
 ```bash
+
+# start minimal infra to run java apps 
+docker compose -f docker-compose.local.yml up -d
 
 # tests
 ./gradlew test
@@ -122,10 +152,10 @@ Execute cloud servers and microservices one by one with Gradle:
 ```bash
 
 # start infra and microservices
-docker compose up -d
+docker compose -f docker-compose.yml up -d
 
 # Make a GET request to the API Gateway to gain access to the microservices.
- curl -X GET -u "customer:customer"  "http://localhost:8080/products" -v
+curl -X GET -u "customer:customer"  "http://localhost:8080/products" -v
 
 ```
 
@@ -151,6 +181,5 @@ This microservices-based application provides a scalable and maintainable struct
 - [x] feat: Dockerize architecture
 - [x] feat: Service discovery
 - [x] feat: Config Server
-- [ ] feat: Implement JWT authentication With Authorization Server
 
 

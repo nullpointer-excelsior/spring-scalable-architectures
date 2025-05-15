@@ -61,6 +61,9 @@ Execute cloud servers and microservices one by one with Gradle:
 
 ```bash
 
+# start minimal infra to run java apps 
+docker compose -f docker-compose.local.yml up -d
+
 # tests
 ./gradlew test
 
@@ -74,10 +77,11 @@ Execute cloud servers and microservices one by one with Gradle:
 ```bash
 
 # start infra and microservices
-docker compose up -d
+docker compose -f docker-compose.yml up -d
 
 # Make a GET request to the API Gateway to gain access to the microservices.
- curl -X GET -u "customer:customer"  "http://localhost:8080/products" -v
+curl -X GET -u "customer:customer"  "http://localhost:8080/products" -v
+
 ```
 
 
