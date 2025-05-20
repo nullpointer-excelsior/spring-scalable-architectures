@@ -31,18 +31,6 @@ This microservices-based application provides a scalable and maintainable struct
 - Integrates an **Auth Server** to manage authentication and authorization, issuing tokens used by the gateway for access control.  
 - **Resilience**: Implements the **Circuit Breaker** pattern using **Resilience4j** tool to improve fault tolerance. If a service becomes unavailable or unresponsive, the circuit breaker prevents further calls to it for a period of time, allowing the system to degrade gracefully and recover more effectively.
 
-
-## 🔏 Security strategies
-
-### Auth Basic
-Basic authentication is used for internal service communication and access to infrastructure components like Config Server and Eureka. It relies on username and password sent in each HTTP request encoded in Base64.
-
-### Oauth2
-OAuth2 is used for client authorization, issuing JWT access tokens that encapsulate user identity and permissions. These tokens are signed and verified by the Auth Server and used by the Resource Server to grant or deny access.
-
-### Spring Security Integration
-Security is implemented using **Spring Security**, which enables the use of multiple security mechanisms such as OAuth2, JWT, and Basic Auth. This flexible approach ensures appropriate protection for each part of the system.
-
 ## 🔧 Running project examples
 
 You need to add the following line `127.0.0.1 auth-server` into your `/etc/hosts` file:
